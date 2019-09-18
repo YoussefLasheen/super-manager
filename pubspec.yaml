@@ -1,0 +1,33 @@
+name: supermanagerandroidx
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flurry_navigation: ^0.1.2
+
+  sliding_up_panel: ^0.3.5
+
+  firebase_auth:
+  firebase_database:
+  
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+    uses-material-design: true
+    assets:
+    - assets/expan1.png
+    - assets/home_white.png
+    - assets/home_black.png
+    - assets/flutter-icon.png
