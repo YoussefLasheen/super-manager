@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flurry_navigation/flurry_navigation.dart';
-import 'package:flurry_navigation/flurry_menu.dart';
+import 'flurry_navigation.dart';
+import 'flurry_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanagerandroidx/screens/dummy_screen.dart';
 import 'package:supermanagerandroidx/bottom_section.dart';

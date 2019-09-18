@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flurry_navigation/flurry_navigation.dart';
+import 'flurry_navigation.dart';
 
 final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
 
@@ -84,10 +84,15 @@ class FlurryMenuState extends State<FlurryMenu> {
               },
             ),
           ),
-          Expanded(
+          Expanded(flex: 6, child: 
+          Column(children: <Widget>[
+            Expanded(
             child: widget.bottomSection,
             flex: 6,
           ),
+          Expanded(flex: 1,child: Container(),)
+          ],))
+          
         ],
       ),
     );

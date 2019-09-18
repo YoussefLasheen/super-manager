@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flurry_navigation/flurry_navigation.dart';
+import '../flurry_navigation.dart';
 
 final Screen dummy_screen = new Screen(
     contentBuilder: (BuildContext context) {
@@ -13,7 +13,7 @@ final Screen dummy_screen = new Screen(
               children: [
                 new Expanded(
                     child: new Center(
-                        child: new Text('Welcome to your home')
+                        child: new Text("Hello")
                     )
                 )
               ],

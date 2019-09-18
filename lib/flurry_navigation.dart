@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:supermanagerandroidx/profile_page.dart';
+
+import 'bottom_section.dart';
 
 class FlurryNavigation extends StatefulWidget {
   final Widget menuScreen;
@@ -21,6 +25,7 @@ class FlurryNavigation extends StatefulWidget {
 class _FlurryNavigationState extends State<FlurryNavigation>
     with TickerProviderStateMixin {
   MenuController menuController;
+  PanelController _pc = new PanelController();
   Curve scaleDownCurve = new Interval(0.0, 1.0, curve: Curves.linear);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.linear);
   Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.elasticOut);
@@ -74,6 +79,7 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       case MenuState.closed:
         //slidePercent = 0.0;
         scalePercent = 0.0;
+        //_pc.hide();
         break;
       case MenuState.open:
         //slidePercent = 1.0;
@@ -82,10 +88,12 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       case MenuState.opening:
         //slidePercent = slideOutCurve.transform(menuController.percentOpen);
         scalePercent = scaleDownCurve.transform(menuController.percentOpen);
+        //_pc.show();
         break;
       case MenuState.closing:
         //slidePercent = slideInCurve.transform(menuController.percentOpen);
         scalePercent = scaleUpCurve.transform(menuController.percentOpen);
+        //_pc.animatePanelToPosition(0);
         break;
     }
     var contentScale;
@@ -114,8 +122,50 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       children: [
         widget.menuScreen,
         createContentDisplay(),
+        SlidingUpPanel(
+          color: Color.fromRGBO(121, 134, 203, 1),
+          isDraggable: true,
+          backdropTapClosesPanel: false,
+          minHeight: MediaQuery.of(context).size.height * 1 / 20,
+          maxHeight: MediaQuery.of(context).size.height,
+          controller: _pc,
+          collapsed: FlatButton(
+              onPressed: () {
+                togglesliding();
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Hi Youssef, You're logged in",
+                ),
+              )),
+          panel: Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).size.height * 1 / 20,
+            ),
+            child: Column(
+              children: <Widget>[
+                Expanded(child:
+                profile_page(),),
+                FlatButton(
+                  onPressed: () {
+                togglesliding();
+              },
+                  child: Text("data"),)
+              ],
+            ),
+          ),
+        ),
       ],
     );
+  }
+
+  togglesliding() {
+    if (_pc.isPanelClosed()) {
+      _pc.animatePanelToPosition(0.265);
+    } else {
+      _pc.close();
+    }
   }
 }
 

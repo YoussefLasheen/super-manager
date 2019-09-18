@@ -9,8 +9,6 @@ final BaseAuth auth;
   final String userId;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("  Welcome, Eslam Lasheen"),
-    );
+    return CircleAvatar(child: Text("Eslam"),radius:double.infinity ,);
   }
 }

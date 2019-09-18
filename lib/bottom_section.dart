@@ -44,16 +44,8 @@ class BottomSection extends StatefulWidget {
 class _BottomSectionState extends State<BottomSection> {
   @override
   Widget build(BuildContext context) {
-    return SlidingUpPanel(
-      parallaxEnabled: true,
-      parallaxOffset: .6,
-      color: Color.fromRGBO(121, 134, 203, 1),
-      isDraggable: true,
-      minHeight: MediaQuery.of(context).size.height * 7,
-      body: Column(
-        children: <Widget>[
-          Container(
-              height: (MediaQuery.of(context).size.height * 0.23),
+    return Container(
+              height: (MediaQuery.of(context).size.height * 0.02),
               child: PageView(
                 physics: BouncingScrollPhysics(),
                 pageSnapping: true,
@@ -84,14 +76,10 @@ class _BottomSectionState extends State<BottomSection> {
                         )
                 ],
               ),
-              ),
-        ],
-      ),
-      panel: profile_page()
-      );
-  }
+              
+    );
 }
-
+}
 class ItemCard extends StatelessWidget {
   final content;
   final color1;
