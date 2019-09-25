@@ -49,8 +49,44 @@ class _MyHomePageState extends State<MyHomePage> {
                   id:
                       'hom', //You can set this to whatever you want but dont duplicate it
                   icon:
-                      'assets/home_black.png', //Set this to the data for the icon of the button
+                      'assets/home_white.png', //Set this to the data for the icon of the button
                   isSelected: true,
+                  selectedBtnColor: Color.fromRGBO(38, 198, 218, 1),
+                  btnShape: BoxShape.circle,
+                  selectedShadowColor: Colors.transparent),
+              new SideMenuItem(
+                  id:
+                      'hom', //You can set this to whatever you want but dont duplicate it
+                  icon:
+                      'assets/sta.png', //Set this to the data for the icon of the button
+                  isSelected: false,
+                  selectedBtnColor: Color.fromRGBO(38, 198, 218, 1),
+                  btnShape: BoxShape.circle,
+                  selectedShadowColor: Colors.transparent),
+              new SideMenuItem(
+                  id:
+                      'hom', //You can set this to whatever you want but dont duplicate it
+                  icon:
+                      'assets/loc.png', //Set this to the data for the icon of the button
+                  isSelected: false,
+                  selectedBtnColor: Color.fromRGBO(38, 198, 218, 1),
+                  btnShape: BoxShape.circle,
+                  selectedShadowColor: Colors.transparent),
+              new SideMenuItem(
+                  id:
+                      'hom', //You can set this to whatever you want but dont duplicate it
+                  icon:
+                      'assets/set.png', //Set this to the data for the icon of the button
+                  isSelected: false,
+                  selectedBtnColor: Color.fromRGBO(38, 198, 218, 1),
+                  btnShape: BoxShape.circle,
+                  selectedShadowColor: Colors.transparent),
+              new SideMenuItem(
+                  id:
+                      'hom', //You can set this to whatever you want but dont duplicate it
+                  icon:
+                      'assets/flutter-icon.png', //Set this to the data for the icon of the button
+                  isSelected: false,
                   selectedBtnColor: Color.fromRGBO(38, 198, 218, 1),
                   btnShape: BoxShape.circle,
                   selectedShadowColor: Colors.transparent),
