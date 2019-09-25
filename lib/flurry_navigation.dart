@@ -129,16 +129,10 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).size.height * 1 / 20,
           ),
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: RootPage(
+          child: RootPage(
                   auth: new Auth(),
                   pc: toggleslidingtomatchmenu,
                 ),
-              ),
-            ],
-          ),
         ),
       );
   }
