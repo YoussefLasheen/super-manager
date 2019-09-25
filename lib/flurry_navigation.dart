@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanagerandroidx/profile_page.dart';
+import 'package:supermanagerandroidx/root.dart';
 
+import 'authentication.dart';
 import 'bottom_section.dart';
 
 class FlurryNavigation extends StatefulWidget {
@@ -22,10 +24,9 @@ class FlurryNavigation extends StatefulWidget {
   _FlurryNavigationState createState() => new _FlurryNavigationState();
 }
 
-class _FlurryNavigationState extends State<FlurryNavigation>
-    with TickerProviderStateMixin {
+class _FlurryNavigationState extends State<FlurryNavigation> with TickerProviderStateMixin {
   MenuController menuController;
-  PanelController _pc = new PanelController();
+  PanelController pc;
   Curve scaleDownCurve = new Interval(0.0, 1.0, curve: Curves.linear);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.linear);
   Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.elasticOut);
@@ -34,41 +35,30 @@ class _FlurryNavigationState extends State<FlurryNavigation>
   @override
   void initState() {
     super.initState();
-
+    pc = new PanelController();
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
-  }
-
-  @override
-  void dispose() {
-    menuController.dispose();
-    super.dispose();
+    menuController.open();
   }
 
   createContentDisplay() {
     return zoomAndSlideContent(
-      new Container(
-        child: new Scaffold(
-            body: Column(children: <Widget>[
-          Expanded(
-            child: widget.contentScreen.contentBuilder(context),
-          ),
-          Row(
-            children: <Widget>[
-              IconButton(
+      new Material(
+        child: Stack(children: <Widget>[
+          widget.contentScreen.contentBuilder(context),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child:IconButton(
                 icon: widget.expandIcon,
                 onPressed: () {
                   menuController.toggle();
                 },
-                alignment: Alignment.bottomLeft,
                 padding: EdgeInsets.all(0),
                 iconSize: widget.iconSize,
               )
-            ],
           ),
-        ])),
-      ),
+        ],),),
     );
   }
 
@@ -79,7 +69,7 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       case MenuState.closed:
         //slidePercent = 0.0;
         scalePercent = 0.0;
-        //_pc.hide();
+        toggleslidingtomatchmenu();
         break;
       case MenuState.open:
         //slidePercent = 1.0;
@@ -88,12 +78,12 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       case MenuState.opening:
         //slidePercent = slideOutCurve.transform(menuController.percentOpen);
         scalePercent = scaleDownCurve.transform(menuController.percentOpen);
-        //_pc.show();
+        toggleslidingtomatchmenu();
         break;
       case MenuState.closing:
         //slidePercent = slideInCurve.transform(menuController.percentOpen);
         scalePercent = scaleUpCurve.transform(menuController.percentOpen);
-        //_pc.animatePanelToPosition(0);
+        toggleslidingtomatchmenu();
         break;
     }
     var contentScale;
@@ -115,6 +105,43 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       );
     });
   }
+  createSlidingUpPanel(BuildContext context) {
+    return SlidingUpPanel(
+        defaultPanelState: PanelState.OPEN,
+        color: Color.fromRGBO(121, 134, 203, 1),
+        isDraggable: false,
+        backdropTapClosesPanel: false,
+        minHeight: MediaQuery.of(context).size.height * 1 / 20,
+        maxHeight: MediaQuery.of(context).size.height,
+        controller: pc,
+        collapsed: FlatButton(
+            onPressed: () {
+              togglesliding();
+              setState(() {});
+            },
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Hi Youssef, You're logged in",
+              ),
+            )),
+        panel: Padding(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 1 / 20,
+          ),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: RootPage(
+                  auth: new Auth(),
+                  pc: toggleslidingtomatchmenu,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,49 +149,36 @@ class _FlurryNavigationState extends State<FlurryNavigation>
       children: [
         widget.menuScreen,
         createContentDisplay(),
-        SlidingUpPanel(
-          color: Color.fromRGBO(121, 134, 203, 1),
-          isDraggable: true,
-          backdropTapClosesPanel: false,
-          minHeight: MediaQuery.of(context).size.height * 1 / 20,
-          maxHeight: MediaQuery.of(context).size.height,
-          controller: _pc,
-          collapsed: FlatButton(
-              onPressed: () {
-                togglesliding();
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Hi Youssef, You're logged in",
-                ),
-              )),
-          panel: Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 1 / 20,
-            ),
-            child: Column(
-              children: <Widget>[
-                Expanded(child:
-                profile_page(),),
-                FlatButton(
-                  onPressed: () {
-                togglesliding();
-              },
-                  child: Text("data"),)
-              ],
-            ),
-          ),
-        ),
+        createSlidingUpPanel(context),
       ],
     );
   }
+  toggleslidingtomatchmenu() {
+    switch (menuController.state) {
+      case MenuState.closed:
+        pc.hide();
+        break;
+      case MenuState.open:
+        pc.show();
+        break;
+      case MenuState.opening:
+        //slidePercent = slideOutCurve.transform(menuController.percentOpen);
+        pc.show();
+        break;
+      case MenuState.closing:
+        //slidePercent = slideInCurve.transform(menuController.percentOpen);
+        pc.close();
+        break;
+    }
+  }
 
   togglesliding() {
-    if (_pc.isPanelClosed()) {
-      _pc.animatePanelToPosition(0.265);
+    if (pc.isPanelClosed()) {
+      pc.animatePanelToPosition(0.265);
+    } else if (pc.getPanelPosition() == 0.265) {
+      pc.open();
     } else {
-      _pc.close();
+      pc.close();
     }
   }
 }
@@ -182,8 +196,7 @@ class FlurryNavigationMenuController extends StatefulWidget {
   }
 }
 
-class FlurryNavigationMenuControllerState
-    extends State<FlurryNavigationMenuController> {
+class FlurryNavigationMenuControllerState extends State<FlurryNavigationMenuController> {
   MenuController menuController;
 
   @override
@@ -194,11 +207,6 @@ class FlurryNavigationMenuControllerState
     menuController.addListener(_onMenuControllerChange);
   }
 
-  @override
-  void dispose() {
-    menuController.removeListener(_onMenuControllerChange);
-    super.dispose();
-  }
 
   getMenuController(BuildContext context) {
     final navigationState =
@@ -217,8 +225,7 @@ class FlurryNavigationMenuControllerState
   }
 }
 
-typedef Widget FlurryNavigationBuilder(
-    BuildContext context, MenuController menuController);
+typedef Widget FlurryNavigationBuilder(BuildContext context, MenuController menuController);
 
 class Screen {
   final WidgetBuilder contentBuilder;
@@ -260,12 +267,7 @@ class MenuController extends ChangeNotifier {
       });
   }
 
-  @override
-  dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
+ 
   get percentOpen {
     return _animationController.value;
   }
