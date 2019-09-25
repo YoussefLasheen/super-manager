@@ -1,37 +1,128 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'login_page.dart';
 import 'authentication.dart';
-import 'profile_page.dart';
 
+class NotificationCard extends StatelessWidget {
+final String messageText;
+final String senderName;
+final IconData notificationIcon;
 
+  const NotificationCard(
+    this.messageText, this.senderName, this.notificationIcon
+      );
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+          children: <Widget>[
+              Expanded(
+                flex: 1,
+               child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: FittedBox(
+                        child: Icon(
+                            notificationIcon,
+                            color: Colors.white,
+                            ),
+                      ),
+                    ),
+                    Spacer(),
+                    Expanded(
+                      flex: 3,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          "2 hours ago",
+                          style: TextStyle(color: Colors.white,),
+                          ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              flex: 2,
+              child: 
+                FittedBox(
+                 child: Text(
+                  "$senderName Messaged You",
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+                ),
+            ),
+            Expanded(
+              flex: 3,
+                child: Text(
+                  messageText,
+                  overflow: TextOverflow.fade,
+                  maxLines: 3,
+                  style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: 40),
+                ),
+            ),
+          ],
+    );
+  }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-var cardsList = [
-  [
-    ItemCard(0.5,Colors.transparent,Colors.transparent,CircularProgressIndicator(value: .75,)),
-    ItemCard(0.5,Colors.transparent,Colors.transparent,CircularProgressIndicator(value: .75,)),
-
-  ],
-  [
-    ItemCard(0.2,Colors.transparent,Colors.transparent,Text("Adham")),
-    ItemCard(0.2,Colors.transparent,Colors.transparent,Text("Adham")),
-    ItemCard(0.2,Colors.transparent,Colors.transparent,Text("Adham")),
-    ItemCard(0.2,Colors.transparent,Colors.transparent,Text("Adham")),
-    ItemCard(0.2,Colors.transparent,Colors.transparent,Text("Adham")),
-    
-  ]
-];
+class CircularProgressIndicatorCard extends StatelessWidget {
+  final String name;
+  final int rating;
+  const CircularProgressIndicatorCard(
+    this.name,
+    this.rating, 
+      );
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: AspectRatio(
+        aspectRatio: 1.0,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                child:CircularProgressIndicator(value: rating/100,valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),),),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Spacer(flex:3),
+                    Expanded(
+                      flex: 4,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text("$rating%",
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: 'Source Sans Pro',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child:FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(name,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style:TextStyle(fontFamily: 'Source Sans Pro',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400),),
+                    ),),
+                    Spacer(flex:4,)
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+  }
+}
 
 class BottomSection extends StatefulWidget {
   BottomSection({Key key,})
@@ -42,64 +133,113 @@ class BottomSection extends StatefulWidget {
 }
 
 class _BottomSectionState extends State<BottomSection> {
+  String _userId = "";
+  @override
+  void initState() {
+    super.initState();
+    Auth().getCurrentUser().then((user) {
+      setState(() {
+          _userId = user?.uid;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-              height: (MediaQuery.of(context).size.height * 0.02),
-              child: PageView(
-                physics: BouncingScrollPhysics(),
-                pageSnapping: true,
-                scrollDirection: Axis.vertical,
-                children: <Widget>[
-                  for (var i = 0; i < cardsList.length; ++i)
-                    ListView.separated(
-                      physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (BuildContext context, int index) =>
-                        Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromRGBO(0, 0, 0, 0.25),
-                                offset: Offset(3, 4),
-                                blurRadius: 6.0,
-                                spreadRadius: 0.3
-                                )]),
-                            child:VerticalDivider(
-                              color: Colors.black12,
-                              width: 1,
-                              endIndent: 5,
-                              indent: 5,
-                            ),),
-                        itemCount: cardsList[i].length,
-                        itemBuilder: (context, index) => cardsList[i][index],
-                        )
-                ],
-              ),
-              
-    );
+ return _userId == ""?  CircularProgressIndicator(): buildPageView(context, _userId);
 }
-}
-class ItemCard extends StatelessWidget {
-  final content;
-  final color1;
-  final color2;
-  final widthRatio;
-  const ItemCard(
-      this.widthRatio, this.color1, this.color2, this.content);
-  @override
-  Widget build(BuildContext context) {
+  buildPageView(BuildContext context, String userId) {
     return Container(
-      width: (MediaQuery.of(context).size.width * widthRatio),
+            child: PageView(
+              physics: BouncingScrollPhysics(),
+              pageSnapping: true,
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: Firestore.instance.collection('users').document(userId).snapshots(),
+                    builder: (context, snapshot) {
+                       if (!snapshot.hasData) return LinearProgressIndicator();
+                      return ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          separatorBuilder: (BuildContext context, int index) =>
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(3, 4),
+                                  blurRadius: 6.0,
+                                  spreadRadius: 0.3
+                                  )]),
+                              child:VerticalDivider(
+                                color: Colors.black12,
+                                width: 1,
+                                endIndent: 5,
+                                indent: 5,
+                              ),),
+                          itemCount: snapshot.data['Rating'].length,
+                          itemBuilder: (context, index) => _buildCircularProgressIndicatorCard(context, snapshot.data['Rating'][index]),
+                          );
+                    }
+                  ),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance.collection('users').document(userId).collection('Notifications').snapshots(),
+                    builder: (context, snapshot) {
+                       if (!snapshot.hasData) return LinearProgressIndicator();
+                      return ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          separatorBuilder: (BuildContext context, int index) =>
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  offset: Offset(3, 4),
+                                  blurRadius: 6.0,
+                                  spreadRadius: 0.3
+                                  )]),
+                              child:VerticalDivider(
+                                color: Colors.black12,
+                                width: 1,
+                                endIndent: 5,
+                                indent: 5,
+                              ),),
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, index) => _buildNotificationCard(context, snapshot.data.documents[index].data),
+                          );
+                    }
+                  )
+              ],
+            ),
+            
+  );
+  }
+}
+
+_buildCircularProgressIndicatorCard (BuildContext context ,Map rating){
+    return Container(
+      width: (MediaQuery.of(context).size.width * .5),
       decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [color1, color2])),
+              colors: [Colors.transparent,Colors.transparent])),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: content,
+        padding: const EdgeInsets.all(10.0),
+        child: CircularProgressIndicatorCard(rating['Name'],rating['Rating'])
       ),
     );
 }
+
+_buildNotificationCard (BuildContext context ,Map notifiaction){
+    return Container(
+      width: (MediaQuery.of(context).size.width * 1/notifiaction['No.Cards']),
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child:NotificationCard(notifiaction['messageText'],notifiaction['senderName'],notifiaction['isImportant']?Icons.notification_important:Icons.notifications)
+      ),
+    );
 }
