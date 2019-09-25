@@ -78,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
+        backgroundColor: Color.fromRGBO(121, 134, 203, 1),
         body: Stack(
           children: <Widget>[
             _showBody(),
@@ -139,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
             hintText: 'Email',
             icon: new Icon(
               Icons.mail,
-              color: Colors.grey,
+              color: Colors.white,
             )),
         validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
         onSaved: (value) => _email = value.trim(),
@@ -158,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
             hintText: 'Password',
             icon: new Icon(
               Icons.lock,
-              color: Colors.grey,
+              color: Colors.white,
             )),
         validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
         onSaved: (value) => _password = value.trim(),
@@ -175,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
           child: new RaisedButton(
             elevation: 5.0,
             shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue,
+            color: Color.fromRGBO(38, 198, 218, 1),
             child: 
                 new Text('Login',
                     style: new TextStyle(fontSize: 20.0, color: Colors.white)),
