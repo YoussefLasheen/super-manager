@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'authentication.dart';
 import 'profile_page.dart';
-import 'package:supermanagerandroidx/login_page.dart';
+import 'package:supermanager/login_page.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({this.auth ,this.pc});

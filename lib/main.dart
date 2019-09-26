@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'flurry_navigation.dart';
 import 'flurry_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:supermanagerandroidx/screens/dummy_screen.dart';
-import 'package:supermanagerandroidx/bottom_section.dart';
+import 'package:supermanager/screens/dummy_screen.dart';
+import 'package:supermanager/bottom_section.dart';
 
 void main() => runApp(new MyApp());
 

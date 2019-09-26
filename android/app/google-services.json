@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:897321335215:android:281ff0e2cfcc4551eed75a",
         "android_client_info": {
-          "package_name": "com.example.supermanagerandroidx"
+          "package_name": "com.example.supermanager"
         }
       },
       "oauth_client": [
@@ -55,7 +55,7 @@
           "client_id": "897321335215-8nmadlt08jk7ls32p5gtbkc4p5k8dghn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.supermanagerandroidx",
+            "package_name": "com.example.supermanager",
             "certificate_hash": "83d4ce5daf47cef54750e6d31cd7a1e884edb67a"
           }
         },

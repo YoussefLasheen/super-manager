@@ -1,4 +1,4 @@
-package com.example.supermanagerandroidx;
+package com.example.supermanager;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

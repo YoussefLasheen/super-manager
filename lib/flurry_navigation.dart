@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:supermanagerandroidx/profile_page.dart';
-import 'package:supermanagerandroidx/root.dart';
+import 'package:supermanager/profile_page.dart';
+import 'package:supermanager/root.dart';
 
 import 'authentication.dart';
 import 'bottom_section.dart';

@@ -1,4 +1,4 @@
-# supermanagerandroidx
+# supermanager
 
 A new Flutter project.
 
