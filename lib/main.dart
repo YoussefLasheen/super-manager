@@ -4,12 +4,17 @@ import 'flurry_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanager/screens/dummy_screen.dart';
 import 'package:supermanager/bottom_section.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
     return new MaterialApp(
       home: new MyHomePage(),
     );
