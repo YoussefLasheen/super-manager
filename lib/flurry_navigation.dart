@@ -131,7 +131,8 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
           ),
           child: RootPage(
                   auth: new Auth(),
-                  pc: toggleslidingtomatchmenu,
+                  pc: pc,
+                  pcf:toggleslidingtomatchmenu,
                 ),
         ),
       );

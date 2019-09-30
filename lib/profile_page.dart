@@ -11,7 +11,7 @@ class profile_page extends StatefulWidget {
   final String userId;
   final String userEmail;
   final String userPhotoUrl;
-  final Function pc;
+  final PanelController pc;
 
   @override
   _profile_pageState createState() => _profile_pageState();
@@ -44,7 +44,7 @@ class _profile_pageState extends State<profile_page> {
         ),
         FlatButton(
                 onPressed: () {
-                  widget.pc();
+                  widget.pc.close();
                   setState(() {});
                 },
                 color: Colors.white,
@@ -56,12 +56,22 @@ class _profile_pageState extends State<profile_page> {
                     color: Color.fromRGBO(38, 198, 218, 1),
                   ),
                 ),
-              )
+              ),
+        FlatButton(child: Text("Signout"),
+        onPressed: ()async{
+          await widget.auth.signOut().then((_){
+            widget.onSignedOut();
+            });
+  },
+        )
       ],
     );
   }
 var i =1;
   double avatarSizing() {
+    if (widget.pc.isPanelClosed()) {
+      i =3;
+    }
     /*if (widget.pc.getPanelPosition() == 1) {
       return MediaQuery.of(context).size.width * 0.1;
     } else if (widget.pc.getPanelPosition() > 0.264) {

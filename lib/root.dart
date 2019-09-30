@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'login_page.dart';
 import 'authentication.dart';
 import 'profile_page.dart';
 import 'package:supermanager/login_page.dart';
 
 class RootPage extends StatefulWidget {
-  RootPage({this.auth ,this.pc});
+  RootPage({this.auth ,this.pc ,this.pcf});
 
   final BaseAuth auth;
-  final Function pc;
+  final PanelController pc;
+  final Function pcf;
 
   @override
   State<StatefulWidget> createState() => new _RootPageState();
@@ -43,7 +45,7 @@ class _RootPageState extends State<RootPage> {
   }
 
   void _onLoggedIn() {
-    widget.pc();
+    widget.pc.close();
     widget.auth.getCurrentUser().then((user){
       setState(() {
         _userId = user.uid.toString();
@@ -58,6 +60,7 @@ class _RootPageState extends State<RootPage> {
   }
 
   void _onSignedOut() {
+    widget.pc.open();
     setState(() {
       authStatus = AuthStatus.NOT_LOGGED_IN;
       _userId = "";
@@ -95,7 +98,7 @@ class _RootPageState extends State<RootPage> {
             userPhotoUrl: _userPhotoUrl,
             auth: widget.auth,
             onSignedOut: _onSignedOut,
-            pc: widget.pc,
+            pc:widget.pc
           );
         } else return _buildWaitingScreen();
         break;
