@@ -14,6 +14,7 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   firebase_storage:
+  cloud_functions: ^0.4.1+1
   flutter:
     sdk: flutter
 
