@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supermanager/screens/administration_screen.dart';
 import 'flurry_navigation.dart';
 import 'flurry_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -88,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   selectedShadowColor: Colors.transparent),
               new SideMenuItem(
                   id:
-                      'hom', //You can set this to whatever you want but dont duplicate it
+                      'admin', //You can set this to whatever you want but dont duplicate it
                   icon:
                       'assets/flutter-icon.png', //Set this to the data for the icon of the button
                   isSelected: false,
@@ -100,6 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
           onMenuItemSelected: (String itemId) {
             if (itemId == 'hom') {
               setState(() => activeScreen = dummy_screen);
+            }else if(itemId == 'admin'){
+              setState(() => activeScreen = administration_screen);
             }
           },
         ),
