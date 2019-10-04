@@ -178,13 +178,13 @@ class _BottomSectionState extends State<BottomSection> {
                                 endIndent: 5,
                                 indent: 5,
                               ),),
-                          itemCount: snapshot.data['Rating'].length,
-                          itemBuilder: (context, index) => _buildCircularProgressIndicatorCard(context, snapshot.data['Rating'][index]),
+                          itemCount: snapshot.data['rating'].length,
+                          itemBuilder: (context, index) => _buildCircularProgressIndicatorCard(context, snapshot.data['rating'][index]),
                           );
                     }
                   ),
                   StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection('users').document(userId).collection('Notifications').snapshots(),
+                    stream: Firestore.instance.collection('users').where('role',isGreaterThanOrEqualTo: 2).snapshots(),
                     builder: (context, snapshot) {
                        if (!snapshot.hasData) return LinearProgressIndicator();
                       return ListView.separated(
@@ -228,18 +228,18 @@ _buildCircularProgressIndicatorCard (BuildContext context ,Map rating){
               colors: [Colors.transparent,Colors.transparent])),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: CircularProgressIndicatorCard(rating['Name'],rating['Rating'])
+        child: CircularProgressIndicatorCard(rating['name'],rating['rating'])
       ),
     );
 }
 
 _buildNotificationCard (BuildContext context ,Map notifiaction){
     return Container(
-      width: (MediaQuery.of(context).size.width * 1/notifiaction['No.Cards']),
+      width: (MediaQuery.of(context).size.width * 0.4),
       color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child:NotificationCard(notifiaction['messageText'],notifiaction['senderName'],notifiaction['isImportant']?Icons.notification_important:Icons.notifications)
+        child:NotificationCard(notifiaction['personalInfo']['name'],notifiaction['personalInfo']['name'],Icons.notifications)
       ),
     );
 }
