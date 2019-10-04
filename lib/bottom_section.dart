@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:supermanager/api.dart';
 import 'authentication.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -134,6 +135,8 @@ class BottomSection extends StatefulWidget {
 
 class _BottomSectionState extends State<BottomSection> {
   String _userId = "";
+  String _userDepartment;
+  int _userRole;
   @override
   void initState() {
     super.initState();
@@ -141,6 +144,13 @@ class _BottomSectionState extends State<BottomSection> {
       setState(() {
           _userId = user?.uid;
       });
+    
+    Api('users').getDocumentById(_userId).then((doc){
+      setState(() {
+       _userRole = doc.data['role'];
+       _userDepartment = doc.data['department'];
+      });
+    });
     });
   }
 
@@ -184,7 +194,10 @@ class _BottomSectionState extends State<BottomSection> {
                     }
                   ),
                   StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection('users').where('role',isGreaterThanOrEqualTo: 2).snapshots(),
+                    stream: Firestore.instance.collection('users')
+                    .where('role',isGreaterThanOrEqualTo: _userRole)
+                    .where('department',isEqualTo: _userDepartment)
+                    .snapshots(),
                     builder: (context, snapshot) {
                        if (!snapshot.hasData) return LinearProgressIndicator();
                       return ListView.separated(
@@ -207,7 +220,10 @@ class _BottomSectionState extends State<BottomSection> {
                                 indent: 5,
                               ),),
                           itemCount: snapshot.data.documents.length,
-                          itemBuilder: (context, index) => _buildNotificationCard(context, snapshot.data.documents[index].data),
+                          itemBuilder: (context, index) {
+                            if (snapshot.data.documents[index].data['userUID'] == userId) return null;
+                            return _buildNotificationCard(context, snapshot.data.documents[index].data);
+                            }
                           );
                     }
                   )
@@ -239,7 +255,7 @@ _buildNotificationCard (BuildContext context ,Map notifiaction){
       color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child:NotificationCard(notifiaction['personalInfo']['name'],notifiaction['personalInfo']['name'],Icons.notifications)
+        child:NotificationCard(notifiaction['personalInfo']['displayName'],notifiaction['personalInfo']['displayName'],Icons.notifications)
       ),
     );
 }
