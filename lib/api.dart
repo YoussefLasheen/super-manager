@@ -28,5 +28,14 @@ class Api{
     return ref.document(id).updateData(data) ;
   }
 
-
+ Future<bool> sendMessage(Map chat , String id)async{
+    try{
+      ref.document(id).setData({'messages':FieldValue.arrayUnion([chat])},merge: true)
+      .whenComplete(() {return true;}).catchError((e) => throw(e));
+    }
+    catch(e){
+      return false;
+    }
+    return true;
+  }
 }
