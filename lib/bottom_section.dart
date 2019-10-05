@@ -250,12 +250,14 @@ _buildCircularProgressIndicatorCard (BuildContext context ,Map rating){
 }
 
 _buildNotificationCard (BuildContext context ,Map notifiaction){
-    return Container(
-      width: (MediaQuery.of(context).size.width * 0.4),
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child:NotificationCard(notifiaction['personalInfo']['displayName'],notifiaction['personalInfo']['displayName'],Icons.notifications)
+    return InkWell(
+          child: Container(
+        width: (MediaQuery.of(context).size.width * 0.4),
+        color: Colors.transparent,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child:NotificationCard(notifiaction['personalInfo']['displayName'],notifiaction['personalInfo']['displayName'],Icons.notifications)
+        ),
       ),
     );
 }
