@@ -56,7 +56,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
     });
   }
-
+  @override
+  void didUpdateWidget(ChatScreen oldWidget) {
+    initUser();
+    super.didUpdateWidget(oldWidget);
+  }
   void initUser() async {
     if (mounted) {
       setState(() => 0);
