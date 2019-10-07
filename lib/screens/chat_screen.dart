@@ -122,13 +122,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildChats() {
-    checkIfExists();
-    if (!exists) {
-      Firestore.instance.collection('chats').document(_uniqueChatid).setData({'messages':[]});
-            return Center(
-              child: LinearProgressIndicator(),
-            );
-          }
     return StreamBuilder(
         stream: Firestore.instance.collection('chats').document(_uniqueChatid).snapshots(),
         builder: (context, snapshot) {
@@ -137,7 +130,16 @@ class _ChatScreenState extends State<ChatScreen> {
               child: CircularProgressIndicator(),
             );
           }
-          List chats = snapshot.data['messages'];
+          List chats;
+          try{
+          chats = snapshot.data['messages'];
+          }on NoSuchMethodError catch(e){
+            print(e);
+            Firestore.instance.collection('chats').document(_uniqueChatid).setData({'messages':[]});
+            return Center(
+              child: CircularProgressIndicator(),
+              );
+              }
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
