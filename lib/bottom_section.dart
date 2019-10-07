@@ -126,8 +126,8 @@ class CircularProgressIndicatorCard extends StatelessWidget {
 }
 
 class BottomSection extends StatefulWidget {
-  BottomSection({Key key,})
-      : super(key: key);
+  final Function(String) onChatSelected;
+  BottomSection({this.onChatSelected});
 
   @override
   _BottomSectionState createState() => _BottomSectionState();
@@ -221,8 +221,8 @@ class _BottomSectionState extends State<BottomSection> {
                               ),),
                           itemCount: snapshot.data.documents.length,
                           itemBuilder: (context, index) {
-                            if (snapshot.data.documents[index].data['userUID'] == userId) return null;
-                            return _buildNotificationCard(context, snapshot.data.documents[index].data);
+                            //if (snapshot.data.documents[index].data['userUID'] == userId) return null;
+                            return _buildNotificationCard(context, snapshot.data.documents[index].data,widget.onChatSelected);
                             }
                           );
                     }
@@ -249,8 +249,9 @@ _buildCircularProgressIndicatorCard (BuildContext context ,Map rating){
     );
 }
 
-_buildNotificationCard (BuildContext context ,Map notifiaction){
+_buildNotificationCard (BuildContext context ,Map notifiaction ,Function onChatSelected){
     return InkWell(
+      onTap:() => onChatSelected(notifiaction['userUID']),
           child: Container(
         width: (MediaQuery.of(context).size.width * 0.4),
         color: Colors.transparent,
