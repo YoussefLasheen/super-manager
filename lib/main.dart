@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supermanager/screens/administration_screen.dart';
+import 'package:supermanager/screens/chat_screen.dart';
 import 'flurry_navigation.dart';
 import 'flurry_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -47,8 +48,18 @@ class _MyHomePageState extends State<MyHomePage> {
         menuScreen: new FlurryMenu(
           bgColor: Color.fromRGBO(121, 134, 203, 1),
           // The content of the bottom sction of the menu screen
-          bottomSection:
-              BottomSection(), //BottomSection() Class is an example of what you can use
+          bottomSection: BottomSection(
+            onChatSelected: (String otherEndId){
+              setState(() {
+              activeScreen =
+               Screen(
+                contentBuilder: (BuildContext context) {
+                  return ChatScreen(otherEndId);
+                  },
+                ); 
+              });
+            },
+          ), //BottomSection() Class is an example of what you can use
           menu: new SideMenu(
             items: [
               new SideMenuItem(
