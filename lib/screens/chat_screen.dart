@@ -1,6 +1,7 @@
 //import 'package:chat_app/controllers/chats_controller.dart';
 //import 'package:chat_app/controllers/user_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:supermanager/api.dart';
 
 import '../authentication.dart';
@@ -23,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool isHeader = true;
   bool exists;
 
-  String _userId;
+  FirebaseUser _user;
   String _uniqueChatid;
 
   @override
@@ -67,8 +68,8 @@ class _ChatScreenState extends State<ChatScreen> {
     }
     await Auth().getCurrentUser().then((user) {
       setState(() {
-        _userId = user.uid;
-        _uniqueChatid = _userId.compareTo(widget.otherEndId)<=-1?_userId+'_to_'+widget.otherEndId:widget.otherEndId+'_to_'+_userId;
+        _user = user;
+        _uniqueChatid = _user.uid.compareTo(widget.otherEndId)<=-1?_user.uid+'_to_'+widget.otherEndId:widget.otherEndId+'_to_'+_user.uid;
     });
     });
   }
@@ -85,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     //ChatsController.sendMessage(chat);
                     Map chat = {
                       'content':val,
-                      'sender' :_userId,
+                      'sender' :_user.uid,
                       'date' : DateTime.now()
                       };
                       /*
@@ -148,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               return ChatWidget(
                 chat: chats[index - 1],
-                isReceived: _userId != chats[index - 1]['sender'],
+                isReceived: _user.uid != chats[index - 1]['sender'],
                 showUser: false,
               );
             },
