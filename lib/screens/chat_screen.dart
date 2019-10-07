@@ -85,7 +85,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     //ChatsController.sendMessage(chat);
                     Map chat = {
                       'content':val,
-                      'sender' :'me',
+                      'sender' :_userId,
                       'date' : DateTime.now()
                       };
                       /*
@@ -148,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               return ChatWidget(
                 chat: chats[index - 1],
-                isReceived: 'me' != chats[index - 1]['sender'],
+                isReceived: _userId != chats[index - 1]['sender'],
                 showUser: false,
               );
             },
