@@ -27,23 +27,20 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
+        Spacer(),
         Expanded(
+          flex: 10,
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 2.0,horizontal: 8.0),
-            decoration: BoxDecoration(color: Color(0xff3b5998).withOpacity(0.06),borderRadius: BorderRadius.circular(32.0),),
+            decoration: BoxDecoration(color: Color.fromRGBO(121, 134, 203, 1).withOpacity(0.06),borderRadius: BorderRadius.circular(32.0),),
             margin: EdgeInsets.all(12.0),
             child: Row(
               children: <Widget>[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    IconButton(icon: Icon(Icons.add_circle,color: Color(0xff3b5998),), onPressed: (){},),
-                  ],
-                ),
                 Expanded(child: TextField(
                   decoration: InputDecoration(
                     border:InputBorder.none,
-                    hintText: "Message...",
+                    hintText: "Type Your Message here",
+                    contentPadding: EdgeInsets.only(left: 10)
                   ),
                   focusNode: focusNode,
                   textInputAction: TextInputAction.send,
@@ -52,12 +49,11 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                 )),
                 IconButton(icon: Icon(isTexting?Icons.send:Icons.keyboard_voice), onPressed: (){
                   sendMessage(editingController.text);
-                },color: Color(0xff3b5998),),
+                },color: Color.fromRGBO(121, 134, 203, 1),),
               ],
             ),
           ),
         ),
-
       ],
     );
   }

@@ -21,7 +21,7 @@ class ChatWidget extends StatelessWidget {
     );
   }
   Widget _buildSentMessage(BuildContext context){
-    Color sendColor= isSuccessful? Color(0xff0084FF): Color(0xfff48024);
+    Color sendColor= isSuccessful? Color.fromRGBO(38, 198, 218, 1): Color(0xfff48024);
     return Container(
       alignment: Alignment.centerRight,
       child: Container(
