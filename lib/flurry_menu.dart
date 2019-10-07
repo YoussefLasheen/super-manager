@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supermanager/bottom_section.dart';
 import 'flurry_navigation.dart';
 
 final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
@@ -7,11 +8,13 @@ final menuScreenKey = new GlobalKey(debugLabel: 'MenuScreen');
 class FlurryMenu extends StatefulWidget {
   final SideMenu menu;
   final Function(String) onMenuItemSelected;
+  final Function(String) onChatSelected;
   final Color bgColor;
   final Widget bottomSection;
   FlurryMenu({
     this.menu,
     this.onMenuItemSelected,
+    this.onChatSelected,
     this.bgColor,
     this.bottomSection
   }) : super(key: menuScreenKey);
@@ -45,13 +48,13 @@ class FlurryMenuState extends State<FlurryMenu> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: widget.bgColor,
-      body: Column(
+      body: FlurryNavigationMenuController(
+              builder: (BuildContext context, MenuController menuController) {
+                return Column(
         children: <Widget>[
           Expanded(
             flex: 14,
-            child: FlurryNavigationMenuController(
-              builder: (BuildContext context, MenuController menuController) {
-                return Row(
+            child: Row(
                   children: <Widget>[
                     Expanded(
                       flex: 6,
@@ -80,9 +83,7 @@ class FlurryMenuState extends State<FlurryMenu> {
                       flex: 14,
                     )
                   ],
-                );
-              },
-            ),
+                ),
           ),
           Expanded(flex: 6, child: 
           Column(children: <Widget>[
@@ -94,6 +95,8 @@ class FlurryMenuState extends State<FlurryMenu> {
           ],))
           
         ],
+          );
+        }
       ),
     );
   }
