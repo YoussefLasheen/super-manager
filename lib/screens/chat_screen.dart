@@ -112,7 +112,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: Text('His Name',
+            child: Text(_user.displayName==null|| _user.displayName == ""?"Unamed User":_user.displayName,
               //widget.friend.displayName,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
             ),
