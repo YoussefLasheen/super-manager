@@ -31,31 +31,6 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     initUser();
-    WidgetsBinding.instance.addPostFrameCallback((val) {
-     scrollController.addListener((){
-       final RenderBox renderBox=_key.currentContext.findRenderObject();
-       final size=renderBox.size;
-       double height=size.height*2/3;
-       if (scrollController.hasClients)
-//        scrollController.animateTo(scrollController.position.maxScrollExtent,
-//            duration: Duration(milliseconds: 100), curve: Curves.easeIn);
-
-       if (scrollController.offset >= height ) {
-         if (mounted) {
-           setState(() {
-             isHeader = false;
-           });
-         }
-       } else if (!isHeader) {
-         if (mounted) {
-           setState(() {
-             isHeader = true;
-           });
-         }
-       }
-     });
-
-    });
   }
   @override
   void didUpdateWidget(ChatScreen oldWidget) {
@@ -89,13 +64,13 @@ class _ChatScreenState extends State<ChatScreen> {
                       'sender' :_user.uid,
                       'date' : DateTime.now()
                       };
-                      /*
-                    scrollController.animateTo(
-                        scrollController.position.maxScrollExtent,
-                        duration: Duration(milliseconds: 100),
-                        curve: Curves.easeIn);*/
+                    
                     setState(() async {
                       await Api('chats').sendMessage(chat, _uniqueChatid);
+                      scrollController.animateTo(
+                        scrollController.position.maxScrollExtent,
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.easeIn);
                     });
                   },
                 )
