@@ -156,7 +156,7 @@ class _BottomSectionState extends State<BottomSection> {
 
   @override
   Widget build(BuildContext context) {
- return _userId == ""?  CircularProgressIndicator(): buildPageView(context, _userId);
+ return _userId == "" ||_userId == null ?  CircularProgressIndicator(): buildPageView(context, _userId);
 }
   buildPageView(BuildContext context, String userId) {
     return Container(
