@@ -145,9 +145,14 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     var user = Provider.of<FirebaseUser>(context);
     bool loggedIn = user != null;
     return Stack(
-      children: [
-        widget.menuScreen,
-        createContentDisplay(),
+      children: <Widget>[
+        loggedIn?
+         Stack(
+          children: [
+            widget.menuScreen,
+            createContentDisplay(),
+          ],
+        ): Container(),
         createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed"),
       ],
     );
