@@ -1,16 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'authentication.dart';
 import 'infoCard.dart';
 
 class profile_page extends StatefulWidget {
-  profile_page({Key key, this.auth, this.userId, this.userEmail,this.userPhotoUrl, this.onSignedOut, this.pc})
+  profile_page({Key key,/* this.auth, this.userId, this.userEmail,this.userPhotoUrl,*/ this.onSignedOut, this.pc})
       : super(key: key);
+      /*
   final BaseAuth auth;
-  final VoidCallback onSignedOut;
   final String userId;
   final String userEmail;
   final String userPhotoUrl;
+  */
+  final VoidCallback onSignedOut;
   final PanelController pc;
 
   @override
@@ -20,18 +24,19 @@ class profile_page extends StatefulWidget {
 class _profile_pageState extends State<profile_page> {
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<FirebaseUser>(context);
     return Column(
       children: <Widget>[
         Align(
           alignment: Alignment.topCenter,
           child: CircleAvatar(
             backgroundImage: NetworkImage(
-                widget.userPhotoUrl??"https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
+                user.photoUrl??"https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
             radius: avatarSizing(),
           ),
         ),
         InfoCard(
-          text: widget.userEmail,
+          text: user.email,
           icon: Icons.email,
         ),
         InfoCard(
@@ -59,7 +64,7 @@ class _profile_pageState extends State<profile_page> {
               ),
         FlatButton(child: Text("Signout"),
         onPressed: ()async{
-          await widget.auth.signOut().then((_){
+          await Auth().signOut().then((_){
             widget.onSignedOut();
             });
   },

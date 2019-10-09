@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'login_page.dart';
 import 'authentication.dart';
@@ -6,23 +8,23 @@ import 'profile_page.dart';
 import 'package:supermanager/login_page.dart';
 
 class RootPage extends StatefulWidget {
-  RootPage({this.auth ,this.pc ,this.pcf});
+  RootPage({/*this.auth ,*/this.pc ,this.pcf});
 
-  final BaseAuth auth;
   final PanelController pc;
   final Function pcf;
 
   @override
   State<StatefulWidget> createState() => new _RootPageState();
 }
-
+/*
 enum AuthStatus {
   NOT_DETERMINED,
   NOT_LOGGED_IN,
   LOGGED_IN,
 }
-
+*/
 class _RootPageState extends State<RootPage> {
+  /*
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
   String _userId = "";
   String _userEmail = "";
@@ -77,33 +79,29 @@ class _RootPageState extends State<RootPage> {
       ),
     );
   }
-
+*/
   @override
   Widget build(BuildContext context) {
-    switch (authStatus) {
-      case AuthStatus.NOT_DETERMINED:
-        return _buildWaitingScreen();
-        break;
-      case AuthStatus.NOT_LOGGED_IN:
+    var user = Provider.of<FirebaseUser>(context);
+    bool loggedIn = user != null;
+    switch (loggedIn) {
+      case false:
         return new LoginPage(
-          auth: widget.auth,
-          onSignedIn: _onLoggedIn,
+          //auth: widget.auth,
+          onSignedIn: (){widget.pc.close();},
         );
         break;
-      case AuthStatus.LOGGED_IN:
-        if (_userId.length > 0 && _userId != null) {
+      case true:
           return new profile_page(
-            userId: _userId,
-            userEmail: _userEmail,
-            userPhotoUrl: _userPhotoUrl,
+            /*
+            userId: user.uid,
+            userEmail: user.email,
+            userPhotoUrl: user.photoUrl,
             auth: widget.auth,
-            onSignedOut: _onSignedOut,
+            */
+            onSignedOut: (){widget.pc.open();},
             pc:widget.pc
           );
-        } else return _buildWaitingScreen();
-        break;
-      default:
-        return _buildWaitingScreen();
     }
   }
 }

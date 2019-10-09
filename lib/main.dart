@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:supermanager/screens/administration_screen.dart';
 import 'package:supermanager/screens/chat_screen.dart';
+import 'api.dart';
 import 'flurry_navigation.dart';
 import 'flurry_menu.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -8,8 +14,12 @@ import 'package:supermanager/screens/dummy_screen.dart';
 import 'package:supermanager/bottom_section.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(new MyApp());
+import 'models/user.dart';
 
+void main() {
+  //Provider.debugCheckInvalidValueType = null;
+  runApp(new MyApp());
+}
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -17,9 +27,22 @@ class MyApp extends StatelessWidget {
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
-    return new MaterialApp(
-      home: new MyHomePage(),
-    );
+        // Make user stream available
+      return MultiProvider(
+      providers: [
+        // Make user stream available
+        StreamProvider<FirebaseUser>.value(value: FirebaseAuth.instance.onAuthStateChanged),
+        // See implementation details in next sections
+        /*
+        ProxyProvider<FirebaseUser, StreamProvider>(
+          builder: (_,user,streamProvider) =>
+          StreamProvider.value(value:Api('users').streamUserCollection(user.uid)))
+      */
+      ],
+        child: MaterialApp(
+          home: MyHomePage(),
+          ),
+        );
   }
 }
 

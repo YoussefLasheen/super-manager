@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanager/profile_page.dart';
 import 'package:supermanager/root.dart';
@@ -105,7 +107,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
       );
     });
   }
-  createSlidingUpPanel(BuildContext context) {
+  createSlidingUpPanel(BuildContext context, String displayname) {
     return SlidingUpPanel(
         defaultPanelState: PanelState.OPEN,
         color: Color.fromRGBO(121, 134, 203, 1),
@@ -122,7 +124,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Hi Youssef, You're logged in",
+                "Hi $displayname, You're logged in",
               ),
             )),
         panel: Padding(
@@ -130,7 +132,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
             top: MediaQuery.of(context).size.height * 1 / 20,
           ),
           child: RootPage(
-                  auth: new Auth(),
+                  //auth: new Auth(),
                   pc: pc,
                   pcf:toggleslidingtomatchmenu,
                 ),
@@ -140,11 +142,13 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
+    var user = Provider.of<FirebaseUser>(context);
+    bool loggedIn = user != null;
     return Stack(
       children: [
         widget.menuScreen,
         createContentDisplay(),
-        createSlidingUpPanel(context),
+        createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed"),
       ],
     );
   }

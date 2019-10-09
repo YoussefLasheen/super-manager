@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'authentication.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({this.auth, this.onSignedIn});
+  LoginPage({/*this.auth, */this.onSignedIn});
 
-  final BaseAuth auth;
+//  final BaseAuth auth;
   final VoidCallback onSignedIn;
 
   @override
@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_validateAndSave()) {
       String userId = "";
       try {
-          userId = await widget.auth.signIn(_email, _password);
+          userId = await Auth().signIn(_email, _password);
           print('Signed in: $userId');
         setState(() {
           _isLoading = false;

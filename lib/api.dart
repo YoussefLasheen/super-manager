@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+
+import 'models/user.dart';
 class Api{
   final Firestore _db = Firestore.instance;
   final String path;
@@ -26,6 +28,15 @@ class Api{
   }
   Future<void> updateDocument(Map data , String id) {
     return ref.document(id).updateData(data) ;
+  }
+
+
+ Stream<User> streamUserCollection(String id) {
+    return _db
+        .collection('users')
+        .document(id)
+        .snapshots()
+        .map((snap) => User.fromFirestore(snap));
   }
 
  Future<bool> sendMessage(Map chat , String id)async{
