@@ -2,6 +2,7 @@
 //import 'package:chat_app/controllers/user_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:supermanager/api.dart';
 
 import '../authentication.dart';
@@ -24,8 +25,8 @@ class _ChatScreenState extends State<ChatScreen> {
   bool isHeader = true;
   bool exists;
 
-  FirebaseUser _user;
-  String _uniqueChatid;
+//  FirebaseUser _user;
+//  String _uniqueChatid;
 
   @override
   void initState() {
@@ -41,21 +42,25 @@ class _ChatScreenState extends State<ChatScreen> {
     if (mounted) {
       setState(() => 0);
     }
+    /*
     await Auth().getCurrentUser().then((user) {
       setState(() {
         _user = user;
         _uniqueChatid = _user.uid.compareTo(widget.otherEndId)<=-1?_user.uid+'_to_'+widget.otherEndId:widget.otherEndId+'_to_'+_user.uid;
     });
     });
+    */
   }
 
   @override
   Widget build(BuildContext context) {
+    var _user = Provider.of<FirebaseUser>(context, listen: false);
+    var _uniqueChatid = _user.uid.compareTo(widget.otherEndId)<=-1?_user.uid+'_to_'+widget.otherEndId:widget.otherEndId+'_to_'+_user.uid;
     return Scaffold(
       key: _scaffoldKey,
       body:Column(
               children: <Widget>[
-                Flexible(child: buildChats()),
+                Flexible(child: buildChats(_user,_uniqueChatid)),
                 ChatInputWidget(
                   onSubmitted: (val) {
                     //ChatsController.sendMessage(chat);
@@ -79,7 +84,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget buildHeader() {
+  Widget buildHeader(FirebaseUser _user) {
     return Container(
       key: _key,
       padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
@@ -97,7 +102,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget buildChats() {
+  Widget buildChats(FirebaseUser _user,String _uniqueChatid) {
     return StreamBuilder(
         stream: Firestore.instance.collection('chats').document(_uniqueChatid).snapshots(),
         builder: (context, snapshot) {
@@ -106,21 +111,12 @@ class _ChatScreenState extends State<ChatScreen> {
               child: CircularProgressIndicator(),
             );
           }
-          List chats;
-          try{
-          chats = snapshot.data['messages'];
-          }on NoSuchMethodError catch(e){
-            print(e);
-            Firestore.instance.collection('chats').document(_uniqueChatid).setData({'messages':[]});
-            return Center(
-              child: CircularProgressIndicator(),
-              );
-              }
+          List chats = snapshot.data['messages'];
           return ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return buildHeader();
+                return buildHeader(_user);
               }
               return ChatWidget(
                 chat: chats[index - 1],
@@ -132,13 +128,6 @@ class _ChatScreenState extends State<ChatScreen> {
           );
         });
   }
-  checkIfExists() async{
-       DocumentSnapshot ds = await Firestore.instance.collection("chats").document(_uniqueChatid).get();
-        this.setState(() {
-          exists = ds.exists;
-        });
-
-    }
   @override
   void dispose() {
     super.dispose();
