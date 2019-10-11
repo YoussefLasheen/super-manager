@@ -5,8 +5,10 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanager/profile_page.dart';
 import 'package:supermanager/root.dart';
 
+import 'api.dart';
 import 'authentication.dart';
 import 'bottom_section.dart';
+import 'models/user.dart';
 
 class FlurryNavigation extends StatefulWidget {
   final Widget menuScreen;
@@ -144,19 +146,19 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
   Widget build(BuildContext context) {
     var user = Provider.of<FirebaseUser>(context);
     bool loggedIn = user != null;
-    return Stack(
-      children: <Widget>[
-        loggedIn?
-         Stack(
-          children: [
-            widget.menuScreen,
-            createContentDisplay(),
-          ],
-        ): Container(),
-        createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed"),
-      ],
-    );
-  }
+    return loggedIn?
+        StreamProvider<User>.value(
+          initialData: User(department: "Loading..."),
+          value: Api('users').streamUserCollection(user.uid),
+          child: Stack(
+            children: [
+              widget.menuScreen,
+              createContentDisplay(),
+              createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed"),
+              ],
+            ),
+          ): createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed");
+        }
   toggleslidingtomatchmenu() {
     switch (menuController.state) {
       case MenuState.closed:
