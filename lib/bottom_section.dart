@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supermanager/api.dart';
 
+import 'models/user.dart';
+
 class NotificationCard extends StatelessWidget {
-final String messageText;
+final Map message;
 final String senderName;
 final IconData notificationIcon;
 
   const NotificationCard(
-    this.messageText, this.senderName, this.notificationIcon
+    this.message, this.senderName, this.notificationIcon
       );
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,8 @@ final IconData notificationIcon;
                       child: FittedBox(
                         fit: BoxFit.contain,
                         child: Text(
-                          "2 hours ago",
+                          message['date']==null?"Never Texted you":
+                          DateTime.now().difference(message['date'].toDate()).inMinutes.toString()+" minutes ago",
                           style: TextStyle(color: Colors.white,),
                           ),
                       ),
@@ -56,7 +59,7 @@ final IconData notificationIcon;
             Expanded(
               flex: 3,
                 child: Text(
-                  messageText,
+                  message['content'],
                   overflow: TextOverflow.fade,
                   maxLines: 3,
                   style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: 40),
@@ -135,10 +138,10 @@ class BottomSection extends StatefulWidget {
 }
 
 class _BottomSectionState extends State<BottomSection> {
+  /*
   //String _userId = "";
   String _userDepartment;
   int _userRole;
-  /*
   @override
   void initState() {
     super.initState();
@@ -159,23 +162,23 @@ class _BottomSectionState extends State<BottomSection> {
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<FirebaseUser>(context);
+    /*
     Api('users').getDocumentById(user.uid).then((doc){
       setState(() {
        _userRole = doc.data['role'];
        _userDepartment = doc.data['department'];
       });
     });
+    */
  return Container(
             child: PageView(
               physics: BouncingScrollPhysics(),
               pageSnapping: true,
               scrollDirection: Axis.vertical,
               children: <Widget>[
-                  StreamBuilder<DocumentSnapshot>(
-                    stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
-                    builder: (context, snapshot) {
-                       if (!snapshot.hasData) return LinearProgressIndicator();
-                      return ListView.separated(
+                  Consumer<User>(
+                    builder: (_, userData,__) =>
+                       ListView.separated(
                         physics: BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
                           separatorBuilder: (BuildContext context, int index) =>
@@ -194,44 +197,46 @@ class _BottomSectionState extends State<BottomSection> {
                                 endIndent: 5,
                                 indent: 5,
                               ),),
-                          itemCount: snapshot.data['rating'].length,
-                          itemBuilder: (context, index) => _buildCircularProgressIndicatorCard(context, snapshot.data['rating'][index]),
-                          );
-                    }
+                          itemCount: userData.rating.length,
+                          itemBuilder: (context, index) => _buildCircularProgressIndicatorCard(context, userData.rating[index]),
+                          )
                   ),
-                  StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection('users')
-                    .where('role',isGreaterThanOrEqualTo: _userRole)
-                    .where('department',isEqualTo: _userDepartment)
-                    .snapshots(),
-                    builder: (context, snapshot) {
-                       if (!snapshot.hasData) return LinearProgressIndicator();
-                      return ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          separatorBuilder: (BuildContext context, int index) =>
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color.fromRGBO(0, 0, 0, 0.25),
-                                  offset: Offset(3, 4),
-                                  blurRadius: 6.0,
-                                  spreadRadius: 0.3
-                                  )]),
-                              child:VerticalDivider(
-                                color: Colors.black12,
-                                width: 1,
-                                endIndent: 5,
-                                indent: 5,
-                              ),),
-                          itemCount: snapshot.data.documents.length,
-                          itemBuilder: (context, index) {
-                            //if (snapshot.data.documents[index].data['userUID'] == userId) return null;
-                            return _buildNotificationCard(context, snapshot.data.documents[index].data,widget.onChatSelected);
-                            }
-                          );
-                    }
+                  Consumer<User>(
+                    builder: (_,userData,__)=>
+                    StreamBuilder<QuerySnapshot>(
+                      stream: Firestore.instance.collection('users')
+                      .where('role',isGreaterThanOrEqualTo: userData.role)
+                      .where('department',isEqualTo: userData.department)
+                      .snapshots(),
+                      builder: (context, snapshot) {
+                         if (!snapshot.hasData) return LinearProgressIndicator();
+                        return ListView.separated(
+                          physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            separatorBuilder: (BuildContext context, int index) =>
+                            Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(0, 0, 0, 0.25),
+                                    offset: Offset(3, 4),
+                                    blurRadius: 6.0,
+                                    spreadRadius: 0.3
+                                    )]),
+                                child:VerticalDivider(
+                                  color: Colors.black12,
+                                  width: 1,
+                                  endIndent: 5,
+                                  indent: 5,
+                                ),),
+                            itemCount: snapshot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              if (snapshot.data.documents[index].data['userUID'] == user.uid) return Container();
+                              return _buildNotificationCard(context, snapshot.data.documents[index].data,widget.onChatSelected);
+                              }
+                            );
+                      }
+                    ),
                   )
               ],
             ),
@@ -333,15 +338,38 @@ _buildCircularProgressIndicatorCard (BuildContext context ,Map rating){
 }
 
 _buildNotificationCard (BuildContext context ,Map notifiaction ,Function onChatSelected){
-    return InkWell(
-      onTap:() => onChatSelected(notifiaction['userUID']),
-          child: Container(
-        width: (MediaQuery.of(context).size.width * 0.4),
-        color: Colors.transparent,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child:NotificationCard(notifiaction['personalInfo']['displayName'],notifiaction['personalInfo']['displayName'],Icons.notifications)
-        ),
-      ),
+    return Consumer<FirebaseUser>(
+                    builder: (_, _user,__) =>
+    StreamBuilder<DocumentSnapshot>(
+      stream: Firestore.instance.collection('chats').document(_user.uid.compareTo(notifiaction['userUID'])<=-1?_user.uid+'_to_'+notifiaction['userUID']:notifiaction['userUID']+'_to_'+_user.uid).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          List chats;
+        try{
+          chats = snapshot.data['messages'];
+          }on NoSuchMethodError catch(e){
+            print(e);
+            Firestore.instance.collection('chats').document(_user.uid.compareTo(notifiaction['userUID'])<=-1?_user.uid+'_to_'+notifiaction['userUID']:notifiaction['userUID']+'_to_'+_user.uid).setData({'messages':[]});
+            return Center(
+              child: CircularProgressIndicator(),
+              );
+          }
+        return InkWell(
+          onTap:() => onChatSelected(notifiaction['userUID']),
+              child: Container(
+            width: (MediaQuery.of(context).size.width * 0.4),
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child:NotificationCard(chats.lastWhere((element) => element['sender'] == notifiaction['userUID'],orElse: () => {'content':"No Recent messages",'date':null,'sender':'noone'}),notifiaction['personalInfo']['displayName'],Icons.notifications)
+            ),
+          ),
+        );
+      }
+    )
     );
 }
