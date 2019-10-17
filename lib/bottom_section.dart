@@ -5,70 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:supermanager/api.dart';
 
 import 'models/user.dart';
-
-class NotificationCard extends StatelessWidget {
-final Map message;
-final String senderName;
-final IconData notificationIcon;
-
-  const NotificationCard(
-    this.message, this.senderName, this.notificationIcon
-      );
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-          children: <Widget>[
-              Expanded(
-                flex: 1,
-               child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: FittedBox(
-                        child: Icon(
-                            notificationIcon,
-                            color: Colors.white,
-                            ),
-                      ),
-                    ),
-                    Spacer(),
-                    Expanded(
-                      flex: 3,
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          message['date']==null?"Never Texted you":
-                          DateTime.now().difference(message['date'].toDate()).inMinutes.toString()+" minutes ago",
-                          style: TextStyle(color: Colors.white,),
-                          ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            Expanded(
-              flex: 2,
-              child: 
-                FittedBox(
-                 child: Text(
-                  "$senderName Messaged You",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-                ),
-            ),
-            Expanded(
-              flex: 3,
-                child: Text(
-                  message['content'],
-                  overflow: TextOverflow.fade,
-                  maxLines: 3,
-                  style: TextStyle(color: Colors.white.withOpacity(0.6),fontSize: 40),
-                ),
-            ),
-          ],
-    );
-  }
-}
+import 'widgets/gesture_card.dart';
 
 class CircularProgressIndicatorCard extends StatelessWidget {
   final String name;
@@ -232,7 +169,7 @@ class _BottomSectionState extends State<BottomSection> {
                             itemCount: snapshot.data.documents.length,
                             itemBuilder: (context, index) {
                               if (snapshot.data.documents[index].data['userUID'] == user.uid) return Container();
-                              return _buildNotificationCard(context, snapshot.data.documents[index].data,widget.onChatSelected);
+                              return _buildNotificationCard(context, snapshot.data.documents[index].data,widget.onChatSelected, userData);
                               }
                             );
                       }
@@ -337,11 +274,10 @@ _buildCircularProgressIndicatorCard (BuildContext context ,Map rating){
     );
 }
 
-_buildNotificationCard (BuildContext context ,Map notifiaction ,Function onChatSelected){
-    return Consumer<FirebaseUser>(
-                    builder: (_, _user,__) =>
-    StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection('chats').document(_user.uid.compareTo(notifiaction['userUID'])<=-1?_user.uid+'_to_'+notifiaction['userUID']:notifiaction['userUID']+'_to_'+_user.uid).snapshots(),
+_buildNotificationCard (BuildContext context ,Map otherEnd ,Function onChatSelected ,User currentUser){
+  String path = currentUser.userUID.compareTo(otherEnd['userUID'])<=-1?currentUser.userUID+'_to_'+otherEnd['userUID']:otherEnd['userUID']+'_to_'+currentUser.userUID;
+    return StreamBuilder<DocumentSnapshot>(
+      stream: Firestore.instance.collection('chats').document(path).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
             return Center(
@@ -351,25 +287,21 @@ _buildNotificationCard (BuildContext context ,Map notifiaction ,Function onChatS
           List chats;
         try{
           chats = snapshot.data['messages'];
-          }on NoSuchMethodError catch(e){
-            print(e);
-            Firestore.instance.collection('chats').document(_user.uid.compareTo(notifiaction['userUID'])<=-1?_user.uid+'_to_'+notifiaction['userUID']:notifiaction['userUID']+'_to_'+_user.uid).setData({'messages':[]});
+          }on NoSuchMethodError {
+            Firestore.instance.collection('chats').document(path).setData({'messages':[]});
             return Center(
               child: CircularProgressIndicator(),
               );
           }
-        return InkWell(
-          onTap:() => onChatSelected(notifiaction['userUID']),
-              child: Container(
-            width: (MediaQuery.of(context).size.width * 0.4),
-            color: Colors.transparent,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child:NotificationCard(chats.lastWhere((element) => element['sender'] == notifiaction['userUID'],orElse: () => {'content':"No Recent messages",'date':null,'sender':'noone'}),notifiaction['personalInfo']['displayName'],Icons.notifications)
-            ),
+        return SizedBox(
+          width:MediaQuery.of(context).size.width/3,
+            child: GestureCard(
+              currentUser: currentUser,
+              otherEnd: otherEnd,
+              chats: chats,
+              onChatSelected: onChatSelected,
           ),
         );
       }
-    )
     );
 }
