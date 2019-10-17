@@ -46,9 +46,9 @@ class FlurryMenuState extends State<FlurryMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: widget.bgColor,
-      body: FlurryNavigationMenuController(
+    return new Material(
+      color: widget.bgColor,
+      child: FlurryNavigationMenuController(
               builder: (BuildContext context, MenuController menuController) {
                 return Column(
         children: <Widget>[
