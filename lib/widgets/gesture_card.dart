@@ -36,6 +36,7 @@ class GestureCardState extends State<GestureCard> {
         (bool newstate) => setState(() => state = newstate);
     double radtoper = value / pi;
     double angle = radtoper.isNegative ? radtoper / 2 * -1 : 1 - radtoper / 2;
+    bool isdownStream = widget.otherEnd['role'] > widget.currentUser.role ? true : false;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => widget.onChatSelected(widget.otherEnd['userUID']),
@@ -57,7 +58,7 @@ class GestureCardState extends State<GestureCard> {
             list[widget.otherEnd['role']] +
                 ' of ' +
                 widget.otherEnd['department'],
-            widget.otherEnd['role'] > widget.currentUser.role ? true : false,
+            isdownStream,
             widget.chats.lastWhere(
               (element) => element['sender'] == widget.otherEnd['userUID'],
               orElse: () => {
@@ -67,7 +68,7 @@ class GestureCardState extends State<GestureCard> {
               },
             ),
           ),
-          state == false
+          state == false || !isdownStream
               ? Container()
               : Container(
                   width: double.infinity,
