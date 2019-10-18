@@ -91,19 +91,22 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
         break;
     }
     var contentScale;
+    var contentTranslation;
     double cornerRadius = 0;
     return OrientationBuilder(builder: (context, orientation) {
-      contentScale = 1.0 - (0.3 * scalePercent);
+      contentScale = 1.0 - (0 * scalePercent);
+      contentTranslation = -300 * scalePercent;
       cornerRadius = widget.curveRadius * menuController.percentOpen;
 
       return new Transform(
-        transform: new Matrix4.translationValues(0.0, 0.0, 0.0)
+        transform: new Matrix4.translationValues(0.0, contentTranslation, 0.0)
           ..scale(contentScale, contentScale),
         alignment: orientation == Orientation.portrait
             ? Alignment.topRight
             : Alignment.topRight,
         child: new ClipRRect(
             borderRadius: new BorderRadius.only(
+                bottomRight: Radius.circular(cornerRadius),
                 bottomLeft: Radius.circular(cornerRadius)),
             child: content),
       );
