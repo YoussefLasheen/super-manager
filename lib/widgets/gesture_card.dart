@@ -145,19 +145,19 @@ class NotificationCard extends StatelessWidget {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                      ),
+                      ),isDownStream == true ?
                       Expanded(
                         child: Center(
                           child: AspectRatio(
                             aspectRatio: 1,
                             child: CircularProgressIndicator(
-                              value: isDownStream == false ? 0 : 1,
+                              value: 1,
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           ),
                         ),
-                      )
+                      ):Spacer()
                     ],
                   ),
                 ),
