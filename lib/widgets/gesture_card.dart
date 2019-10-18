@@ -51,13 +51,12 @@ class GestureCardState extends State<GestureCard> {
         double changeInR = -details.localOffsetFromOrigin.direction;
         onChanged(changeInR);
       },
-      child: Stack(
-        children: <Widget>[
-          NotificationCard(
+      child:NotificationCard(
             widget.otherEnd['personalInfo']['displayName'],
             list[widget.otherEnd['role']] +
                 ' of ' +
                 widget.otherEnd['department'],
+                angle,
             isdownStream,
             widget.chats.lastWhere(
               (element) => element['sender'] == widget.otherEnd['userUID'],
@@ -67,42 +66,6 @@ class GestureCardState extends State<GestureCard> {
                 'sender': 'noone'
               },
             ),
-          ),
-          state == false || !isdownStream
-              ? Container()
-              : Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.black38,
-                  child: Stack(
-                    children: <Widget>[
-                      Center(
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: CircularProgressIndicator(
-                            value: angle + 0.02,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          (angle * 100).toStringAsFixed(0) + "%",
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Source Sans Pro',
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 50,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-        ],
       ),
     );
   }
@@ -111,12 +74,14 @@ class GestureCardState extends State<GestureCard> {
 class NotificationCard extends StatelessWidget {
   final String senderName;
   final String senderDesc;
+  final double senderRating;
   final Map message;
   final bool isDownStream;
 
   const NotificationCard(
     this.senderName,
     this.senderDesc,
+    this.senderRating,
     this.isDownStream,
     this.message,
   );
@@ -147,11 +112,12 @@ class NotificationCard extends StatelessWidget {
                         ),
                       ),isDownStream == true ?
                       Expanded(
+                        flex: 1,
                         child: Center(
                           child: AspectRatio(
                             aspectRatio: 1,
                             child: CircularProgressIndicator(
-                              value: 1,
+                              value: senderRating,
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
