@@ -96,111 +96,114 @@ class NotificationCard extends StatelessWidget {
   );
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  flex: 3,
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 5,
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            "$senderName",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),isDownStream == true ?
-                      Expanded(
-                        flex: 1,
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: CircularProgressIndicator(
-                              value: senderRating,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+    return Container(
+      color: isDownStream? Colors.transparent:Colors.black12,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 5,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 5,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              "$senderName",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                      ):Spacer()
-                    ],
+                        ),isDownStream == true ?
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: CircularProgressIndicator(
+                                value: senderRating,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                          ),
+                        ):Spacer()
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text(
-                        senderDesc,
-                        overflow: TextOverflow.fade,
-                        maxLines: 1,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic,
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          senderDesc,
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Spacer(
-            flex: 2,
-          ),
-          Expanded(
-            flex: 10,
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    message['date'] == null
-                        ? "Never Texted you"
-                        : DateTime.now()
-                                    .difference(message['date'].toDate())
-                                    .inMinutes <
-                                60
-                            ? DateTime.now()
-                                    .difference(message['date'].toDate())
-                                    .inMinutes
-                                    .toString() +
-                                " Minutes ago:"
-                            : DateTime.now()
-                                    .difference(message['date'].toDate())
-                                    .inHours
-                                    .toString() +
-                                " Hours ago:",
-                    style: TextStyle(
-                      color: Colors.white,
+            Spacer(
+              flex: 2,
+            ),
+            Expanded(
+              flex: 10,
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      message['date'] == null
+                          ? "Never Texted you"
+                          : DateTime.now()
+                                      .difference(message['date'].toDate())
+                                      .inMinutes <
+                                  60
+                              ? DateTime.now()
+                                      .difference(message['date'].toDate())
+                                      .inMinutes
+                                      .toString() +
+                                  " Minutes ago:"
+                              : DateTime.now()
+                                      .difference(message['date'].toDate())
+                                      .inHours
+                                      .toString() +
+                                  " Hours ago:",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Text(
-                    message['content'],
-                    overflow: TextOverflow.fade,
-                    maxLines: 3,
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.6), fontSize: 40),
+                  Expanded(
+                    child: Text(
+                      message['content'],
+                      overflow: TextOverflow.fade,
+                      maxLines: 3,
+                      style: TextStyle(
+                          color: Colors.white.withOpacity(0.6), fontSize: 40),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
