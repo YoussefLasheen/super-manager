@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -46,6 +47,7 @@ class GestureCardState extends State<GestureCard> {
       },
       onLongPressEnd: (LongPressEndDetails details) {
         onStateChanged(false);
+        Firestore.instance.collection('users').document(widget.otherEnd['userUID']).setData({'rating':[{'name':'General Rating','rating':(angle*100).toInt()}]},merge: true);
       },
       onLongPressMoveUpdate: (LongPressMoveUpdateDetails details) {
         double changeInR = -details.localOffsetFromOrigin.direction;
