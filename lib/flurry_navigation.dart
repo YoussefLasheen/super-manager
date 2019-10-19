@@ -112,7 +112,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
       );
     });
   }
-  createSlidingUpPanel(BuildContext context, String displayname) {
+  createSlidingUpPanel(BuildContext context) {
     return SlidingUpPanel(
         defaultPanelState: PanelState.OPEN,
         color: Color.fromRGBO(121, 134, 203, 1),
@@ -126,12 +126,16 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
               togglesliding();
               setState(() {});
             },
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Hi $displayname, You're logged in",
+            child: Consumer<User>(
+              builder: (_, userData,__) =>
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Hi "+userData.personalInfo['displayName']+" You're logged in",
+                ),
               ),
-            )),
+            ),
+            ),
         panel: Padding(
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).size.height * 1 / 20,
@@ -151,16 +155,16 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     bool loggedIn = user != null;
     return loggedIn?
         StreamProvider<User>.value(
-          initialData: User(department: "Loading..."),
+          initialData: User(department: "Loading...", personalInfo: {'displayName':'not Signed In'}),
           value: Api('users').streamUserCollection(user.uid),
           child: Stack(
             children: [
               widget.menuScreen,
               createContentDisplay(),
-              createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed"),
+              createSlidingUpPanel(context),
               ],
             ),
-          ): createSlidingUpPanel(context, loggedIn && user.displayName != ""?user.displayName:"Unnamed");
+          ): createSlidingUpPanel(context);
         }
   toggleslidingtomatchmenu() {
     switch (menuController.state) {
