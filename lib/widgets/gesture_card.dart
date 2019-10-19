@@ -4,6 +4,8 @@ import 'dart:math';
 
 import 'package:supermanager/models/user.dart';
 
+import 'package:flutter/services.dart';
+
 List list = [
   'Head',
   'Manager',
@@ -40,14 +42,19 @@ class GestureCardState extends State<GestureCard> {
     bool isdownStream = widget.otherEnd['role'] > widget.currentUser.role ? true : false;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => widget.onChatSelected(widget.otherEnd['userUID']),
+      onTap: () {
+        widget.onChatSelected(widget.otherEnd['userUID']);
+        HapticFeedback.mediumImpact();
+      },
       onLongPressStart: (LongPressStartDetails details) {
         onChanged(-0);
         onStateChanged(true);
+        HapticFeedback.lightImpact();
       },
       onLongPressEnd: (LongPressEndDetails details) {
         onStateChanged(false);
         Firestore.instance.collection('users').document(widget.otherEnd['userUID']).setData({'rating':[{'name':'General Rating','rating':(angle*100).toInt()}]},merge: true);
+        HapticFeedback.lightImpact();
       },
       onLongPressMoveUpdate: (LongPressMoveUpdateDetails details) {
         double changeInR = -details.localOffsetFromOrigin.direction;
