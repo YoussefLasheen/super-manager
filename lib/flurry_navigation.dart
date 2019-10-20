@@ -154,7 +154,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     bool loggedIn = user != null;
     return loggedIn?
         StreamProvider<User>.value(
-          initialData: User(department: "Loading...", personalInfo: {'displayName':'not Signed In'}),
+          initialData: User(department: "Loading...",role: 0, personalInfo: {'displayName':'not Signed In'}),
           value: Api('users').streamUserCollection(user.uid),
           child: Stack(
             children: [
