@@ -7,6 +7,7 @@ import 'infoCard.dart';
 import 'models/user.dart';
 
 List list = [
+  'Loading',
   'Head',
   'Manager',
   'Department Manager',
@@ -50,58 +51,64 @@ class _ProfileState extends State<Profile> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(user.photoUrl ??
-                                      "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
-                                  radius: double.infinity,
+                      Expanded(
+                        child: Flex(
+                          direction: isPanelOpen ? Axis.vertical : Axis.horizontal,
+                          children: <Widget>[
+                            Expanded(
+                                child: Center(
+                                  child: AspectRatio(
+                                    aspectRatio: 1,
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(user.photoUrl ??
+                                          "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
+                                      radius: double.infinity,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                                  children: <Widget>[
-                                    FittedBox(
-                                      child: Text(
-                                        userData.personalInfo['displayName'],
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                        maxLines: 1,
-                                        textAlign: TextAlign.start,
+                            Expanded(
+                              flex: isPanelOpen? 1:3,
+                              child: Column(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: FittedBox(
+                                          child: Text(
+                                            userData.personalInfo['displayName'],
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                ),
+                                            maxLines: 1,
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    FittedBox(
-                                      child: Text(
-                                        list[userData.role] +
-                                            ' of ' +
-                                            userData.department +
-                                            " at",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontStyle: FontStyle.italic),
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
+                                      Expanded(
+                                        child: FittedBox(
+                                          child: Text(
+                                            list[userData.role] +
+                                                ' of ' +
+                                                userData.department,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontStyle: FontStyle.italic,
+                                                ),
+                                            maxLines: 1,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Spacer(),
                       FlatButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: new BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight:Radius.circular(20)),
-                          side: BorderSide(color: Colors.blue)
+                          side: BorderSide(color: Color.fromRGBO(38, 198, 218, 1))
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 200),
                         onPressed: () {
