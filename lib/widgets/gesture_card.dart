@@ -7,6 +7,7 @@ import 'package:supermanager/models/user.dart';
 import 'package:flutter/services.dart';
 
 List list = [
+  'Loading...'
   'Head',
   'Manager',
   'Department Manager',
