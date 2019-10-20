@@ -54,9 +54,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var isMenuOpen = Provider.of<bool>(context);
     var _user = Provider.of<FirebaseUser>(context, listen: false);
     var _uniqueChatid = _user.uid.compareTo(widget.otherEndId)<=-1?_user.uid+'_to_'+widget.otherEndId:widget.otherEndId+'_to_'+_user.uid;
     return Scaffold(
+      resizeToAvoidBottomInset: !isMenuOpen,
       key: _scaffoldKey,
       body:Column(
               children: <Widget>[
@@ -84,21 +86,41 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget buildHeader(FirebaseUser _user) {
-    return Container(
-      key: _key,
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(_user.displayName==null|| _user.displayName == ""?"Unamed User":_user.displayName,
-              //widget.friend.displayName,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
-            ),
+  Widget buildHeader(String _otherEndId) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: Api('users').getDocumentById(_otherEndId),
+      builder: (context, snapshot) {
+        return Container(
+          key: _key,
+          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(snapshot.hasData?snapshot.data['personalInfo']['displayName']:"Loading",
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+                ),
+              ),
+              CircleAvatar(
+                backgroundImage: NetworkImage("https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png"),
+                radius: 60.0,
+                ),
+              Container(
+                padding: EdgeInsets.only(top:50),
+                alignment: Alignment.center,
+                child: Container(
+                  constraints: BoxConstraints(maxWidth:MediaQuery.of(context).size.width*3/4 ),
+                  padding: EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: Color(0xfffff5c4),
+                    borderRadius: BorderRadius.circular(15.0),),
+                  child: Text("This is the begining of the chat",style: TextStyle(fontSize: 18.0,color: Colors.black54),),
+                  ),
+                ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 
@@ -116,12 +138,11 @@ class _ChatScreenState extends State<ChatScreen> {
             controller: scrollController,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return buildHeader(_user);
+                return buildHeader(widget.otherEndId);
               }
               return ChatWidget(
                 chat: chats[index - 1],
                 isReceived: _user.uid != chats[index - 1]['sender'],
-                showUser: false,
               );
             },
             itemCount: chats.length + 1,

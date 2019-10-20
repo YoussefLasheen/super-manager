@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 class ChatWidget extends StatelessWidget {
   final Map chat;
   final bool isReceived;
-  final bool showUser;
   final bool isSuccessful;
-  const ChatWidget({Key key,@required this.chat,this.isReceived=false, this.showUser=true, this.isSuccessful=true}) : super(key: key);
+  const ChatWidget({Key key,@required this.chat,this.isReceived=false, this.isSuccessful=true}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,19 +36,11 @@ class ChatWidget extends StatelessWidget {
     Color receivedColor=Color(0x99eeeeee);
     return Container(
       alignment: Alignment.centerLeft,
-      child: Row(
-        children: <Widget>[
-          isReceived&&showUser?Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleAvatar(backgroundImage: NetworkImage('chat.from.profilePicture'),radius: 12.0,),
-          ):Container(width: 32.0,height: 24.0,),
-          Container(
+         child: Container(
             constraints: BoxConstraints(maxWidth:MediaQuery.of(context).size.width*3/4 ),
             padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(color: receivedColor,borderRadius: BorderRadius.circular(25.0),),
             child: Text(chat['content'],style: TextStyle(fontSize: 18.0,color: Colors.black),),
-          ),
-        ],
       ),
     );
   }
