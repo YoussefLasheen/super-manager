@@ -95,7 +95,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     double cornerRadius = 0;
     return OrientationBuilder(builder: (context, orientation) {
       contentScale = 1.0 - (0.05 * scalePercent);
-      contentTranslation = -210 * scalePercent;
+      contentTranslation = - MediaQuery.of(context).size.height*0.265 * scalePercent;
       cornerRadius = widget.curveRadius * menuController.percentOpen;
 
       return new Transform(
@@ -124,7 +124,6 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
         collapsed: FlatButton(
             onPressed: () {
               togglesliding();
-              setState(() {});
             },
             child: Consumer<User>(
               builder: (_, userData,__) =>
@@ -189,8 +188,6 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     if (pc.isPanelClosed()) {
       pc.animatePanelToPosition(0.265);
     } else if (pc.getPanelPosition() == 0.265) {
-      pc.open();
-    } else {
       pc.close();
     }
   }

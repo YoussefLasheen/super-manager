@@ -4,95 +4,127 @@ import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'authentication.dart';
 import 'infoCard.dart';
+import 'models/user.dart';
 
-class profile_page extends StatefulWidget {
-  profile_page({Key key,/* this.auth, this.userId, this.userEmail,this.userPhotoUrl,*/ this.onSignedOut, this.pc})
-      : super(key: key);
-      /*
-  final BaseAuth auth;
-  final String userId;
-  final String userEmail;
-  final String userPhotoUrl;
-  */
+List list = [
+  'Head',
+  'Manager',
+  'Department Manager',
+];
+
+class Profile extends StatefulWidget {
+  Profile({this.onSignedOut, this.pc});
+
   final VoidCallback onSignedOut;
   final PanelController pc;
 
   @override
-  _profile_pageState createState() => _profile_pageState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _profile_pageState extends State<profile_page> {
+class _ProfileState extends State<Profile> {
+  bool isPanelOpen = true;
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<FirebaseUser>(context);
-    return Column(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.topCenter,
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                user.photoUrl??"https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
-            radius: avatarSizing(),
-          ),
-        ),
-        InfoCard(
-          text: user.email,
-          icon: Icons.email,
-        ),
-        InfoCard(
-          text: "gdcegypt.com",
-          icon: Icons.web,
-        ),
-        InfoCard(
-          text: 'Cairo, Egypt',
-          icon: Icons.location_city,
-        ),
-        FlatButton(
-                onPressed: () {
-                  widget.pc.close();
-                  setState(() {});
-                },
-                color: Colors.white,
-                child: Text(
-                  "Close",
-                  style: TextStyle(
-                    fontFamily: 'Source Sans Pro',
-                    fontSize: 20.0,
-                    color: Color.fromRGBO(38, 198, 218, 1),
+    var userData = Provider.of<User>(context);
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: isPanelOpen?(MediaQuery.of(context).size.height*0.95)-16: MediaQuery.of(context).size.height*0.235,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white38,
+                  borderRadius: BorderRadius.all(Radius.circular(32)),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: AspectRatio(
+                                aspectRatio: 1,
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(user.photoUrl ??
+                                      "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
+                                  radius: double.infinity,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                                  children: <Widget>[
+                                    FittedBox(
+                                      child: Text(
+                                        userData.personalInfo['displayName'],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                        maxLines: 1,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    FittedBox(
+                                      child: Text(
+                                        list[userData.role] +
+                                            ' of ' +
+                                            userData.department +
+                                            " at",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontStyle: FontStyle.italic),
+                                        maxLines: 1,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        ],
+                      ),
+                      Spacer(),
+                      FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight:Radius.circular(20)),
+                          side: BorderSide(color: Colors.blue)
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 200),
+                        onPressed: () {
+                          bool newstate;
+                          isPanelOpen == true? newstate = false:newstate = true;
+                          isPanelOpen?widget.pc.close():widget.pc.open();
+                          setState(() {
+                            isPanelOpen = newstate;
+                          });
+                        },
+                        color: Colors.white,
+                        child: Text(
+                          isPanelOpen?"Finish":"Edit",
+                          style: TextStyle(
+                            fontFamily: 'Source Sans Pro',
+                            fontSize: 16.0,
+                            color: Color.fromRGBO(38, 198, 218, 1),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-        FlatButton(child: Text("Signout"),
-        onPressed: ()async{
-          await Auth().signOut().then((_){
-            widget.onSignedOut();
-            });
-  },
-        )
-      ],
+            ),
+          ),
+        ],
+      ),
     );
-  }
-var i =1;
-  double avatarSizing() {
-    if (widget.pc.isPanelClosed()) {
-      i =3;
-    }
-    /*if (widget.pc.getPanelPosition() == 1) {
-      return MediaQuery.of(context).size.width * 0.1;
-    } else if (widget.pc.getPanelPosition() > 0.264) {
-      return MediaQuery.of(context).size.width * 0.3;
-    } else {
-      return MediaQuery.of(context).size.width * 0.1;
-    }*/
-    if (i==1) {
-      i++;
-      return MediaQuery.of(context).size.width * 0.3;
-    } else if (i ==2) {
-      i++;
-      return MediaQuery.of(context).size.width * 0.1;
-    } else {
-      i=1;
-      return MediaQuery.of(context).size.width * 0.1;
-    }
   }
 }

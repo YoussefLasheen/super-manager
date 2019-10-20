@@ -92,7 +92,7 @@ class _RootPageState extends State<RootPage> {
         );
         break;
       case true:
-          return new profile_page(
+          return new Profile(
             /*
             userId: user.uid,
             userEmail: user.email,
