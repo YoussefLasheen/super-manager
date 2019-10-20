@@ -23,6 +23,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  @override
+  void initState() {
+    super.initState();
+    isPanelOpen = widget.pc.isPanelOpen();
+  }
   bool isPanelOpen = true;
   @override
   Widget build(BuildContext context) {
