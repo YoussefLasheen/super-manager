@@ -3,12 +3,6 @@ import '../flurry_navigation.dart';
 //import 'package:supermanager/authentication.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
-final Screen administration_screen = new Screen(
-    contentBuilder: (BuildContext context) {
-      return LoginPage();
-    }
-);
-
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _LoginPageState();

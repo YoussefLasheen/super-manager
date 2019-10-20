@@ -12,7 +12,7 @@ import 'models/user.dart';
 
 class FlurryNavigation extends StatefulWidget {
   final Widget menuScreen;
-  final Screen contentScreen;
+  final Widget contentScreen;
   final Image expandIcon;
   final double iconSize;
   final double curveRadius;
@@ -50,7 +50,7 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     return zoomAndSlideContent(
       new Material(
         child: Stack(children: <Widget>[
-          widget.contentScreen.contentBuilder(context),
+          widget.contentScreen,
           Align(
             alignment: Alignment.bottomLeft,
             child:IconButton(
@@ -95,7 +95,12 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     double cornerRadius = 0;
     return OrientationBuilder(builder: (context, orientation) {
       contentScale = 1.0 - (0.05 * scalePercent);
-      contentTranslation = - MediaQuery.of(context).size.height*0.265 * scalePercent;
+      contentTranslation =  
+      menuController.state == MenuState.open || menuController.state == MenuState.opening || menuController.state == MenuState.closing
+      ? MediaQuery.of(context).viewInsets.bottom == 0
+      ? -MediaQuery.of(context).size.height * 0.265* scalePercent
+      :(-MediaQuery.of(context).viewInsets.bottom) + MediaQuery.of(context).size.height * 1/20* scalePercent
+      :0.0;
       cornerRadius = widget.curveRadius * menuController.percentOpen;
 
       return new Transform(
@@ -156,13 +161,16 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
         StreamProvider<User>.value(
           initialData: User(department: "Loading...",role: 0, personalInfo: {'displayName':'not Signed In'}),
           value: Api('users').streamUserCollection(user.uid),
-          child: Stack(
-            children: [
-              widget.menuScreen,
-              createContentDisplay(),
-              createSlidingUpPanel(context),
-              ],
-            ),
+          child: Provider<bool>.value(
+            value: menuController.state== MenuState.closed?false:true,
+            child: Stack(
+              children: [
+                widget.menuScreen,
+                createContentDisplay(),
+                createSlidingUpPanel(context),
+                ],
+              ),
+          ),
           ): createSlidingUpPanel(context);
         }
   toggleslidingtomatchmenu() {
@@ -237,13 +245,6 @@ class FlurryNavigationMenuControllerState extends State<FlurryNavigationMenuCont
 
 typedef Widget FlurryNavigationBuilder(BuildContext context, MenuController menuController);
 
-class Screen {
-  final WidgetBuilder contentBuilder;
-
-  Screen({
-    this.contentBuilder,
-  });
-}
 
 class MenuController extends ChangeNotifier {
   final TickerProvider vsync;

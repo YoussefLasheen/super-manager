@@ -53,7 +53,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   //Decalre active screen var with the the default screen somewhere accesible to the contentScreen attributes
-  var activeScreen = dummy_screen;
+  Widget activeScreen = DummyPage();
   Widget build(BuildContext context) {
     return FlurryNavigation(
         // The curve of the screen (Double)
@@ -74,12 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           bottomSection: BottomSection(
             onChatSelected: (String otherEndId){
               setState(() {
-              activeScreen =
-               Screen(
-                contentBuilder: (BuildContext context) {
-                  return ChatScreen(otherEndId);
-                  },
-                ); 
+              activeScreen = ChatScreen(otherEndId);
               });
             },
           ), //BottomSection() Class is an example of what you can use
@@ -134,9 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           onMenuItemSelected: (String itemId) {
             if (itemId == 'hom') {
-              setState(() => activeScreen = dummy_screen);
+              setState(() => activeScreen = DummyPage());
             }else if(itemId == 'admin'){
-              setState(() => activeScreen = administration_screen);
+              setState(() => activeScreen = DummyPage());
             }
           },
         ),
