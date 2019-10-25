@@ -105,27 +105,37 @@ class _ProfileState extends State<Profile> {
                           ],
                         ),
                       ),
-                      FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight:Radius.circular(20)),
-                          side: BorderSide(color: Color.fromRGBO(38, 198, 218, 1))
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 200),
-                        onPressed: () {
-                          bool newstate;
-                          isPanelOpen == true? newstate = false:newstate = true;
-                          isPanelOpen?widget.pc.close():widget.pc.open();
-                          setState(() {
-                            isPanelOpen = newstate;
-                          });
-                        },
-                        color: Colors.white,
-                        child: Text(
-                          isPanelOpen?"Finish":"Edit",
-                          style: TextStyle(
-                            fontFamily: 'Source Sans Pro',
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(38, 198, 218, 1),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height/30,
+                        width: MediaQuery.of(context).size.width,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight:Radius.circular(20)),
+                            side: BorderSide(color: Color.fromRGBO(38, 198, 218, 1))
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 200),
+                          onPressed: () {
+                            bool newstate;
+                            isPanelOpen == true? newstate = false:newstate = true;
+                            isPanelOpen?widget.pc.close() : widget.pc.open();
+                            setState(() {
+                              isPanelOpen = newstate;
+                            });
+                          },
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: FittedBox(
+                              child: Text(
+                                isPanelOpen? "Finish" : "Edit",
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontFamily: 'Source Sans Pro',
+                                  fontSize: 126.0,
+                                  color: Color.fromRGBO(38, 198, 218, 1),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
