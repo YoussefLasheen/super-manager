@@ -14,7 +14,10 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   firebase_storage:
-  cloud_functions: ^0.4.1+1
+  cloud_functions:
+    git:
+      url: https://github.com/FirebaseExtended/flutterfire.git
+      path: packages/cloud_functions
   flutter:
     sdk: flutter
 
