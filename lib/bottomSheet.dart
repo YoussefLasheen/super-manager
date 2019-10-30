@@ -376,6 +376,9 @@ class ColorPickerBuilder extends StatelessWidget {
           },
         );
       },
+      child: Icon(
+        Icons.color_lens,
+        ),
     );
   }
 }
