@@ -49,4 +49,24 @@ class Api{
     }
     return true;
   }
+ Future<bool> addTask(Map task , String id)async{
+    try{
+      ref.document(id).collection('Data').document('Data').setData({'Tasks':{DateTime.now().toString():task}},merge: true,)
+      .whenComplete(() {return true;}).catchError((e) => throw(e));
+    }
+    catch(e){
+      return false;
+    }
+    return true;
+  }
+ Future<bool> updateTodos(String taskName,List todos , String id)async{
+    try{
+      ref.document(id).collection('Data').document('Data').setData({'Tasks':{taskName:{'todos':todos}}},merge: true)
+      .whenComplete(() {return true;}).catchError((e) => throw(e));
+    }
+    catch(e){
+      return false;
+    }
+    return true;
+  }
 }
