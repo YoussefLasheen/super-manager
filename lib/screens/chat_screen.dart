@@ -64,6 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
               children: <Widget>[
                 Flexible(child: buildChats(_user,_uniqueChatid)),
                 ChatInputWidget(
+                  otherEndId: widget.otherEndId,
                   onSubmitted: (val) {
                     //ChatsController.sendMessage(chat);
                     Map chat = {
@@ -105,18 +106,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 backgroundImage: NetworkImage("https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-32.png"),
                 radius: 60.0,
                 ),
-              Container(
-                padding: EdgeInsets.only(top:50),
-                alignment: Alignment.center,
-                child: Container(
-                  constraints: BoxConstraints(maxWidth:MediaQuery.of(context).size.width*3/4 ),
-                  padding: EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Color(0xfffff5c4),
-                    borderRadius: BorderRadius.circular(15.0),),
-                  child: Text("This is the begining of the chat",style: TextStyle(fontSize: 18.0,color: Colors.black54),),
-                  ),
-                ),
+              ChatWidget(
+                chat: {'content':'This is the begining of the chat'},
+                isReceived: null,
+              )
             ],
           ),
         );
@@ -142,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
               }
               return ChatWidget(
                 chat: chats[index - 1],
-                isReceived: _user.uid != chats[index - 1]['sender'],
+                isReceived:chats[index - 1]['sender'] == 'SYSTEM'?null: _user.uid != chats[index - 1]['sender'],
               );
             },
             itemCount: chats.length + 1,
