@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supermanager/bottomSheet.dart';
 
 class ChatInputWidget extends StatefulWidget {
   final Function(String) onSubmitted;
+  final String otherEndId;
 
-  const ChatInputWidget({Key key,@required this.onSubmitted}) : super(key: key);
+  const ChatInputWidget({Key key,@required this.onSubmitted, this.otherEndId}) : super(key: key);
   @override
   State<StatefulWidget> createState() => _ChatInputWidgetState();
 
@@ -47,9 +49,17 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                   controller: editingController,
                   onSubmitted: sendMessage,
                 )),
-                IconButton(icon: Icon(isTexting?Icons.send:Icons.keyboard_voice), onPressed: (){
-                  sendMessage(editingController.text);
-                },color: Color.fromRGBO(121, 134, 203, 1),),
+                IconButton(
+                  icon: Icon(
+                    isTexting?
+                    Icons.send
+                    :Icons.library_add), 
+                    onPressed: (){
+                      isTexting?
+                      sendMessage(editingController.text)
+                      :Modal().mainBottomSheet(context, widget.otherEndId);
+                      },
+                    color: Color.fromRGBO(121, 134, 203, 1),),
               ],
             ),
           ),
@@ -65,6 +75,6 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
     }
     widget.onSubmitted(message);
     editingController.text='';
-    focusNode.unfocus();
+    //focusNode.unfocus();
   }
 }
