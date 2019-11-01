@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
             15420),
         // The content of the screen
         contentScreen: activeScreen,
-        menuScreen: Container(
+        menuScreen: Material(
           color: Color.fromRGBO(121, 134, 203, 1),
           child: Column(
             children: <Widget>[
