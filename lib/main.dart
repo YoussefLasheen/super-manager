@@ -68,23 +68,25 @@ class _MyHomePageState extends State<MyHomePage> {
             15420),
         // The content of the screen
         contentScreen: activeScreen,
-        menuScreen: new FlurryMenu(
-          bgColor: Color.fromRGBO(121, 134, 203, 1),
-          // The content of the bottom sction of the menu screen
-          bottomSection: BottomSection(
-            onChatSelected: (String otherEndId){
-              setState(() {
-              activeScreen = ChatScreen(otherEndId);
-              });
-            },
-          ), //BottomSection() Class is an example of what you can use
-          menu: new SideMenu(
-            items: []
+        menuScreen: Container(
+          color: Color.fromRGBO(121, 134, 203, 1),
+          child: Column(
+            children: <Widget>[
+              Spacer(flex: 22,),
+              Expanded(
+                flex: 10,
+                child: BottomSection(
+                onChatSelected: (String otherEndId){
+                  setState(() {
+                  activeScreen = ChatScreen(otherEndId);
+                  });
+                },
+            ),
+              ),
+            Spacer(flex: 1,)
+            ],
           ),
-          onMenuItemSelected: (String itemId) {
-              setState(() => activeScreen = DummyPage());
-          },
-        ),
+        )
     );
   }
 }
