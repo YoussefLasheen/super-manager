@@ -39,7 +39,7 @@ class GestureCardState extends State<GestureCard> {
     ValueChanged<bool> onStateChanged =
         (bool newstate) => setState(() => state = newstate);
     double radtoper = value / pi;
-    double angle = radtoper.isNegative ? radtoper / 2 * -1 : 1 - radtoper / 2;
+    double angle = ((((radtoper.isNegative ? radtoper / 2 * -1 : 1 - radtoper / 2)*8).roundToDouble())/8);
     bool isdownStream = widget.otherEnd['role'] > widget.currentUser.role ? true : false;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -129,6 +129,7 @@ class NotificationCard extends StatelessWidget {
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: CircularProgressIndicator(
+                                strokeWidth: 2,
                                 value: senderRating,
                                 valueColor:
                                     AlwaysStoppedAnimation<Color>(Colors.white),

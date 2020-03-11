@@ -11,10 +11,10 @@ dependencies:
 
   sliding_up_panel: ^0.3.5
 
-  firebase_auth:
-  cloud_firestore:
-  firebase_storage:
-  cloud_functions:
+  firebase_auth: ^0.15.5+2
+  cloud_firestore: ^0.13.4+1
+  firebase_storage: ^3.1.3
+  cloud_functions: ^0.4.2+2
   flutter_colorpicker:
   flutter:
     sdk: flutter

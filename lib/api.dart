@@ -59,9 +59,9 @@ class Api{
     }
     return true;
   }
- Future<bool> updateTodos(String taskName,List todos , String id)async{
+ Future<bool> updateTask(String taskName,Map update , String id)async{
     try{
-      ref.document(id).collection('Data').document('Data').setData({'Tasks':{taskName:{'todos':todos}}},merge: true)
+      ref.document(id).collection('Data').document('Data').setData({'Tasks':{taskName:update}},merge: true)
       .whenComplete(() {return true;}).catchError((e) => throw(e));
     }
     catch(e){

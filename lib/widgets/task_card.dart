@@ -26,121 +26,162 @@ class TaskCard extends StatelessWidget {
     Color color = Color(task.color);
     var user = Provider.of<FirebaseUser>(context);
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {},
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.0),
         ),
-        elevation: 4.0,
-        margin: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+        elevation: 8.0,
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Icon(IconData(task.codePoint,fontFamily: 'MaterialIcons'),color: color,),
-                          Expanded(
-                              flex: 8,
-                              child: task.dueDate == null
-                                  ? Container()
-                                  : FittedBox(
-                                      child: Text(
-                                        'Due:'
-                                        "\n${task.dueDate.day}/\n${task.dueDate.month}/\n${task.dueDate.year}",
-                                        maxLines: 4,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .body1
-                                            .copyWith(color: Colors.grey[500]),
-                                      ),
-                                    )),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 4.0),
-                            child: Text(
-                              "$totalTodos Task",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .body1
-                                  .copyWith(color: Colors.grey[500]),
-                            ),
-                          ),
-                          Container(
-                            child: task.name == ''
-                                  ? Container()
-                            :FittedBox(
-                              child: Text(task.name,
+          padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+          child: Stack(
+            children: <Widget>[
+              Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              InkWell(
+                                child: Icon(
+                                  IconData(task.codePoint,
+                                      fontFamily: 'MaterialIcons'),
+                                  color: color,
+                                ),
+                                onLongPress: () {
+                                  Api('users').updateTask(
+                                      task.id,
+                                      {'isCompleted': !task.isCompleted},
+                                      user.uid);
+                                },
+                              ),
+                              Expanded(
+                                  flex: 8,
+                                  child: task.dueDate == null
+                                      ? Container()
+                                      : FittedBox(
+                                          child: Text(
+                                            'Due:'
+                                            "\n${task.dueDate.day}/\n${task.dueDate.month}/\n${task.dueDate.year}",
+                                            maxLines: 4,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body1
+                                                .copyWith(
+                                                    color: Colors.grey[500]),
+                                          ),
+                                        )),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 4.0),
+                                child: Text(
+                                  "$totalTodos Task",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .title
-                                      .copyWith(color: Colors.black54)),
-                            ),
-                          ),
-                          Spacer(),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: ListView.builder(
-                        itemExtent: 40,
-                        padding: EdgeInsets.all(0),
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          var todo = todos[index];
-                          List newTodos = new List.from(todos);
-                          return ListTile(
-                            leading: Checkbox(
-                                activeColor: color,
-                                onChanged: (value) {
-                                  var tile =
-                                      newTodos.firstWhere((ct) => ct == todo);
-                                  tile['isCompleted'] = value;
-                                  Api('users')
-                                      .updateTodos(task.id, newTodos, user.uid);
-                                }, // model.updateTodo(todo.copy(isCompleted: value ? 1 : 0)),
-                                value: todo['isCompleted']),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete_outline),
-                              onPressed: () {
-                                newTodos.remove(todo);
-                                Api('users')
-                                    .updateTodos(task.id, newTodos, user.uid);
-                              }, //model.removeTodo(todo),
-                            ),
-                            title: Text(
-                              todo['name'],
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                                color: todo['isCompleted'] == true
-                                    ? color
-                                    : Colors.black54,
-                                decoration: todo['isCompleted'] == true
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
+                                      .body1
+                                      .copyWith(color: Colors.grey[500]),
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        itemCount: todos.length,
-                      ),
+                              Container(
+                                child: task.name == ''
+                                    ? Container()
+                                    : FittedBox(
+                                        child: Text(task.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .title
+                                                .copyWith(
+                                                    color: Colors.black54)),
+                                      ),
+                              ),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: ListView.builder(
+                            itemExtent: 30,
+                            padding: EdgeInsets.all(0),
+                            physics: BouncingScrollPhysics(),
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return task.desc == ''
+                                    ? Container()
+                                    : Text(
+                                        task.desc,
+                                        style: TextStyle(
+                                          fontSize: 10.0,
+                                          fontWeight: FontWeight.w400,
+                                          fontStyle: FontStyle.italic,
+                                          color: Colors.black54,
+                                        ),
+                                      );
+                              }
+                              var todo = todos[index - 1];
+                              List newTodos = new List.from(todos);
+                              return Row(
+                                children: <Widget>[
+                                  Checkbox(
+                                      tristate: true,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      activeColor: color,
+                                      onChanged: (value) {
+                                        if (!task.isCompleted) {
+                                          var tile = newTodos
+                                              .firstWhere((ct) => ct == todo);
+                                          tile['isCompleted'] = value;
+                                          Api('users').updateTask(task.id,
+                                              {'todos': newTodos}, user.uid);
+                                        }
+                                      }, // model.updateTodo(todo.copy(isCompleted: value ? 1 : 0)),
+                                      value: todo['isCompleted']),
+                                  Expanded(
+                                    child: Text(
+                                      todo['name'],
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w600,
+                                        color: todo['isCompleted'] != false
+                                            ? color
+                                            : Colors.black54,
+                                        decoration: todo['isCompleted'] != false
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                            itemCount: todos.length + 1,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  TaskProgressIndicator(
+                    color: color,
+                    progress: task.isCompleted
+                        ? 100
+                        : (taskCompletionPercent * 0.9).toInt(),
+                  ),
+                ],
               ),
-              TaskProgressIndicator(
-                color: color,
-                progress: taskCompletionPercent,
-              ),
+              task.isCompleted
+                  ? Center(
+                      child: Divider(
+                      color: Colors.red,
+                      thickness: 5,
+                    ))
+                  : Container()
             ],
           ),
         ),

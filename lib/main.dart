@@ -72,9 +72,9 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Color.fromRGBO(121, 134, 203, 1),
           child: Column(
             children: <Widget>[
-              Spacer(flex: 22,),
+              Spacer(flex: 13,),
               Expanded(
-                flex: 10,
+                flex: 5,
                 child: BottomSection(
                 onChatSelected: (String otherEndId){
                   setState(() {

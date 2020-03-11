@@ -62,7 +62,7 @@ class _IconPickerState extends State<IconPicker> {
                 widget.onIconChanged(iconData);
               },
               borderRadius: BorderRadius.circular(50.0),
-              child: Icon(iconData,color: widget.highlightColor,)
+              child: Icon(iconData,color: iconData == selectedIconData?widget.unHighlightColor:widget.highlightColor,)
             ),
           );
         },

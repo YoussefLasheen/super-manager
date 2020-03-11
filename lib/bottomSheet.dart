@@ -75,6 +75,7 @@ class _SheetBodyState extends State<SheetBody> {
                     style: TextStyle(fontSize: 44, fontStyle: FontStyle.normal),
                     decoration: InputDecoration(hintText: 'Enter a Title'),
                     textInputAction: TextInputAction.next,
+                    maxLength: 10,
                     onFieldSubmitted: (_) {
                       FocusScope.of(context).requestFocus(descFocus);
                     },
@@ -91,6 +92,7 @@ class _SheetBodyState extends State<SheetBody> {
                     controller: descController,
                     cursorColor: taskColor,
                     focusNode: descFocus,
+                    maxLength: 50,
                     textInputAction: TextInputAction.newline,
                     style: TextStyle(fontSize: 22, fontStyle: FontStyle.normal),
                     decoration:
@@ -228,9 +230,7 @@ class _SheetBodyState extends State<SheetBody> {
                         Icons.attach_file,
                         color: taskColor,
                       ),
-                      onPressed: () async {
-                        dueDate = _selectDate(context);
-                      },
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -348,10 +348,13 @@ class ColorPickerBuilder extends StatelessWidget {
               content: SingleChildScrollView(
                 child: BlockPicker(
                   availableColors: [
-                    Colors.blueGrey,
+                    Colors.redAccent,
                     Colors.red,
+                    Colors.pinkAccent,
                     Colors.pink,
+                    Colors.purpleAccent,
                     Colors.purple,
+                    Colors.deepPurpleAccent,
                     Colors.deepPurple,
                     Colors.indigo,
                     Colors.blue,
@@ -361,12 +364,10 @@ class ColorPickerBuilder extends StatelessWidget {
                     Colors.green,
                     Colors.lightGreen,
                     Colors.lime,
-                    Colors.yellow,
                     Colors.amber,
                     Colors.orange,
                     Colors.deepOrange,
                     Colors.brown,
-                    Colors.grey,
                   ],
                   pickerColor: color,
                   onColorChanged: onColorChanged,

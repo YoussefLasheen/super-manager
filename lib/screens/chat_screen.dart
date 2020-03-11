@@ -73,8 +73,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       'date' : DateTime.now()
                       };
                     
-                    setState(() async {
-                      await Api('chats').sendMessage(chat, _uniqueChatid);
+                    setState(() {
+                      Api('chats').sendMessage(chat, _uniqueChatid);
                       scrollController.animateTo(
                         scrollController.position.maxScrollExtent,
                         duration: Duration(milliseconds: 100),

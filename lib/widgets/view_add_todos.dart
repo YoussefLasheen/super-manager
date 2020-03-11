@@ -18,7 +18,6 @@ class ViewAddTodos extends StatefulWidget {
 class _ViewAddTodosState extends State<ViewAddTodos> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   ListModel<Map> _list;
-  int _nextItem; // The next item inserted when the user presses the '+' button.
 
   TextEditingController editingController = TextEditingController();
 
@@ -30,7 +29,6 @@ class _ViewAddTodosState extends State<ViewAddTodos> {
       initialItems: <Map>[],
       removedItemBuilder: _buildRemovedItem,
     );
-    _nextItem = 3;
   }
 
   // Used to build list items that haven't been removed.
@@ -38,7 +36,6 @@ class _ViewAddTodosState extends State<ViewAddTodos> {
       BuildContext context, int index, Animation<double> animation) {
     if (_list.length == index)
       return Container(
-        margin: EdgeInsets.all(12.0),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -47,7 +44,16 @@ class _ViewAddTodosState extends State<ViewAddTodos> {
                   border: InputBorder.none,
                   hintText: "Type a Todo here",
                   contentPadding: EdgeInsets.only(left: 10)),
-              textInputAction: TextInputAction.send,
+              maxLength: 15,
+              textInputAction: TextInputAction.done,
+              onEditingComplete: () {
+                if (editingController.text == '') {
+                } else {
+                  _insert(editingController.text);
+                  widget.callback(_list._items);
+                  editingController.clear();
+                }
+              },
               controller: editingController,
             )),
             IconButton(
@@ -83,11 +89,9 @@ class _ViewAddTodosState extends State<ViewAddTodos> {
   // completed (even though it's gone as far this ListModel is concerned).
   // The widget will be used by the [AnimatedListState.removeItem] method's
   // [AnimatedListRemovedItemBuilder] parameter.
-  Widget _buildRemovedItem(
-      String item, BuildContext context, Animation<double> animation) {
+  Widget _buildRemovedItem(BuildContext context, Animation<double> animation) {
     return CardItem(
       animation: animation,
-      name: item,
       color: Colors.red,
       // No gesture detector here: we don't want removed items to be interactive.
     );
@@ -101,18 +105,24 @@ class _ViewAddTodosState extends State<ViewAddTodos> {
   // Remove the selected item from the list model.
   void _remove(int index) {
     _list.removeAt(index);
-    setState(() {});
+    //setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedList(
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.all(0),
-      shrinkWrap: true,
-      key: _listKey,
-      initialItemCount: _list.length + 1,
-      itemBuilder: _buildItem,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 30),
+      decoration: BoxDecoration(
+          border: Border.all(color: widget.taskColor),
+          borderRadius: BorderRadius.circular(5)),
+      child: AnimatedList(
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.all(0),
+        shrinkWrap: true,
+        key: _listKey,
+        initialItemCount: _list.length + 1,
+        itemBuilder: _buildItem,
+      ),
     );
   }
 }
@@ -151,7 +161,7 @@ class ListModel<E> {
     if (removedItem != null) {
       _animatedList.removeItem(index,
           (BuildContext context, Animation<double> animation) {
-        return removedItemBuilder(removedItem, context, animation);
+        return Container();
       });
     }
     return removedItem;
@@ -197,35 +207,34 @@ class _CardItemState extends State<CardItem> {
     ValueChanged<bool> onValue =
         (bool newvalue) => setState(() => value = newvalue);
     widget.callback(value);
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: SizeTransition(
-        axis: Axis.vertical,
-        sizeFactor: widget.animation,
-        child: SizedBox(
-          child: ListTile(
-            leading: Checkbox(
-              activeColor: widget.color,
-              value: value,
-              onChanged: (newValue) {
-                setState(() {
-                  onValue(newValue);
-                });
-              },
-            ),
-            trailing: IconButton(
-                icon: Icon(Icons.delete_outline),
-                onPressed: () {
-                  widget.remove(widget.index);
-                }),
-            title: Text(
-              widget.name,
-              maxLines: 1,
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.black54,
-              ),
+    return SizeTransition(
+      axis: Axis.vertical,
+      sizeFactor: widget.animation,
+      child: SizedBox(
+        child: ListTile(
+          contentPadding: EdgeInsets.all(0),
+          leading: Checkbox(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            activeColor: widget.color,
+            value: value,
+            onChanged: (newValue) {
+              setState(() {
+                onValue(newValue);
+              });
+            },
+          ),
+          trailing: IconButton(
+              icon: Icon(Icons.delete_outline),
+              onPressed: () {
+                widget.remove(widget.index);
+              }),
+          title: Text(
+            widget.name,
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+              color: Colors.black54,
             ),
           ),
         ),
