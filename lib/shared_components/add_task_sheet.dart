@@ -9,6 +9,7 @@ import 'package:supermanager/shared_components/icon_picker.dart';
 
 class Modal {
   mainBottomSheet(BuildContext context, String otherEndId) {
+    final myModel = Provider.of<FirebaseUser>(context, listen: false);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -18,7 +19,7 @@ class Modal {
             topLeft: Radius.circular(50), topRight: Radius.circular(50)),
       ),
       builder: (BuildContext context) {
-        return SheetBody(otherEndId);
+        return Provider.value(value: myModel,child: SheetBody(otherEndId));
       },
     );
   }
