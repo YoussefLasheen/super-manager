@@ -3,13 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:supermanager/api.dart';
 
-import '../authentication.dart';
-import '../chat_input_widget.dart';
-import '../chat_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:supermanager/screens/chat_screen/components/chat_input_widget.dart';
+import 'package:supermanager/screens/chat_screen/components/chat_widget.dart';
+import 'package:supermanager/services/api.dart';
 
 class ChatScreen extends StatefulWidget {
 final String otherEndId;

@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'authentication.dart';
-import 'infoCard.dart';
-import 'models/user.dart';
+import 'package:supermanager/models/user.dart';
 
 List list = [
   'Loading',

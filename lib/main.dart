@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supermanager/navigation/flurry_navigation.dart';
+import 'package:supermanager/screens/bottom_section/bottom_section.dart';
+import 'package:supermanager/screens/chat_screen/chat_screen.dart';
 
-import 'package:supermanager/screens/administration_screen.dart';
-import 'package:supermanager/screens/chat_screen.dart';
-import 'api.dart';
-import 'flurry_navigation.dart';
-import 'flurry_menu.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanager/screens/dummy_screen.dart';
-import 'package:supermanager/bottom_section.dart';
 import 'package:flutter/services.dart';
 
 import 'models/user.dart';

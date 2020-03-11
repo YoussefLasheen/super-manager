@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../flurry_navigation.dart';
-//import 'package:supermanager/authentication.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:supermanager/services/authentication.dart';
 
 class LoginPage extends StatefulWidget {
+  LoginPage({/*this.auth, */this.onSignedIn});
+
+//  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+
   @override
   State<StatefulWidget> createState() => new _LoginPageState();
 }
@@ -11,7 +14,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = new GlobalKey<FormState>();
-  final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'createUser',);
 
   String _email;
   String _password;
@@ -38,16 +40,16 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
     if (_validateAndSave()) {
-      dynamic userId = "";
+      String userId = "";
       try {
-          userId = await callable.call(<String, dynamic>{'email': '$_email', 'password': '$_password'}).toString();
+          userId = await Auth().signIn(_email, _password);
           print('Signed in: $userId');
         setState(() {
           _isLoading = false;
         });
 
         if (userId.length > 0 && userId != null) {
-          SnackBar(content: Text("Done"),);
+          widget.onSignedIn();
         }
 
       } catch (e) {

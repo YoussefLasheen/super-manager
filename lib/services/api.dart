@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
-import 'models/user.dart';
+import 'package:supermanager/models/user.dart';
+
+
 class Api{
   final Firestore _db = Firestore.instance;
   final String path;

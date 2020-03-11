@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../bottomSheet.dart';
+import 'package:supermanager/shared_components/add_task_sheet.dart';
 
 class AddPageCard extends StatelessWidget {
   final Color color;

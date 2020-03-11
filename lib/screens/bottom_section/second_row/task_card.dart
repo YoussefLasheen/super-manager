@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supermanager/api.dart';
 import 'package:supermanager/models/task.dart';
-import 'package:supermanager/widgets/add_task_card.dart';
-import 'package:supermanager/widgets/task_progress_indicator.dart';
+import 'package:supermanager/screens/bottom_section/first_row/task_progress_indicator.dart';
+import 'package:supermanager/services/api.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;

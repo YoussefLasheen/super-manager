@@ -2,11 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'login_page.dart';
-import 'authentication.dart';
-import 'profile_page.dart';
-import 'package:supermanager/login_page.dart';
 
+import 'package:supermanager/screens/auth_screen/login_page.dart';
+import 'package:supermanager/screens/slide_up_screen/profile_page.dart';
 class RootPage extends StatefulWidget {
   RootPage({/*this.auth ,*/this.pc ,this.pcf});
 

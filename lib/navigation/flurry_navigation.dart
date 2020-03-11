@@ -2,13 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:supermanager/profile_page.dart';
-import 'package:supermanager/root.dart';
-
-import 'api.dart';
-import 'authentication.dart';
-import 'bottom_section.dart';
-import 'models/user.dart';
+import 'package:supermanager/authentication/root.dart';
+import 'package:supermanager/models/user.dart';
+import 'package:supermanager/services/api.dart';
 
 class FlurryNavigation extends StatefulWidget {
   final Widget menuScreen;

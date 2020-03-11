@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supermanager/api.dart';
-import 'package:supermanager/widgets/add_task_card.dart';
-import 'package:supermanager/widgets/task_card.dart';
-
-import 'models/task.dart';
-import 'models/user.dart';
-import 'widgets/gesture_card.dart';
+import 'package:supermanager/models/task.dart';
+import 'package:supermanager/models/user.dart';
+import 'package:supermanager/screens/bottom_section/second_row/add_task_card.dart';
+import 'package:supermanager/screens/bottom_section/second_row/task_card.dart';
+import 'package:supermanager/screens/bottom_section/third_row/gesture_card.dart';
 
 class CircularProgressIndicatorCard extends StatelessWidget {
   final String name;

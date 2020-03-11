@@ -2,11 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:supermanager/widgets/icon_picker.dart';
-import 'package:supermanager/widgets/view_add_todos.dart';
-
-import 'api.dart';
-import 'util.dart';
+import 'package:supermanager/models/util.dart';
+import 'package:supermanager/screens/chat_screen/view_add_todos.dart';
+import 'package:supermanager/services/api.dart';
+import 'package:supermanager/shared_components/icon_picker.dart';
 
 class Modal {
   mainBottomSheet(BuildContext context, String otherEndId) {
