@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:supermanager/models/util.dart';
-import 'package:supermanager/screens/chat_screen/view_add_todos.dart';
+import 'package:supermanager/shared_components/view_add_todos.dart';
 import 'package:supermanager/services/api.dart';
 import 'package:supermanager/shared_components/icon_picker.dart';
 
