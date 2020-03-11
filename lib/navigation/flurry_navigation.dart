@@ -1,32 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:supermanager/authentication/root.dart';
-import 'package:supermanager/models/user.dart';
-import 'package:supermanager/services/api.dart';
 
 class FlurryNavigation extends StatefulWidget {
-  final Widget menuScreen;
   final Widget contentScreen;
-  final Image expandIcon;
-  final double iconSize;
-  final double curveRadius;
+  final Function menuState;
 
-  FlurryNavigation(
-      {this.menuScreen,
-      this.contentScreen,
-      this.expandIcon,
-      this.iconSize,
-      this.curveRadius});
+  FlurryNavigation({
+    this.contentScreen, this.menuState,
+  });
 
   @override
   _FlurryNavigationState createState() => new _FlurryNavigationState();
 }
 
-class _FlurryNavigationState extends State<FlurryNavigation> with TickerProviderStateMixin {
+class _FlurryNavigationState extends State<FlurryNavigation>
+    with TickerProviderStateMixin {
   MenuController menuController;
-  PanelController pc;
   Curve scaleDownCurve = new Interval(0.0, 1.0, curve: Curves.linear);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.linear);
   Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.elasticOut);
@@ -35,7 +23,6 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
   @override
   void initState() {
     super.initState();
-    pc = new PanelController();
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
@@ -45,20 +32,24 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
   createContentDisplay() {
     return zoomAndSlideContent(
       new Material(
-        child: Stack(children: <Widget>[
-          widget.contentScreen,
-          Align(
-            alignment: Alignment.bottomLeft,
-            child:IconButton(
-                icon: widget.expandIcon,
-                onPressed: () {
-                  menuController.toggle();
-                },
-                padding: EdgeInsets.all(0),
-                iconSize: widget.iconSize,
-              )
-          ),
-        ],),),
+        child: Stack(
+          children: <Widget>[
+            widget.contentScreen,
+            Align(
+                alignment: Alignment.bottomLeft,
+                child: IconButton(
+                  icon: Image.asset("assets/expan1.png"),
+                  onPressed: () {
+                    menuController.toggle();
+                  },
+                  padding: EdgeInsets.all(0),
+                  iconSize: ((MediaQuery.of(context).size.width *
+                          MediaQuery.of(context).size.height) /
+                      15420),
+                )),
+          ],
+        ),
+      ),
     );
   }
 
@@ -69,21 +60,22 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
       case MenuState.closed:
         //slidePercent = 0.0;
         scalePercent = 0.0;
-        toggleslidingtomatchmenu();
+        widget.menuState(false);
         break;
       case MenuState.open:
         //slidePercent = 1.0;
         scalePercent = 1.0;
+        widget.menuState(true);
         break;
       case MenuState.opening:
         //slidePercent = slideOutCurve.transform(menuController.percentOpen);
         scalePercent = scaleDownCurve.transform(menuController.percentOpen);
-        toggleslidingtomatchmenu();
+        widget.menuState(true);
         break;
       case MenuState.closing:
         //slidePercent = slideInCurve.transform(menuController.percentOpen);
         scalePercent = scaleUpCurve.transform(menuController.percentOpen);
-        toggleslidingtomatchmenu();
+        widget.menuState(false);
         break;
     }
     var contentScale;
@@ -91,13 +83,15 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
     double cornerRadius = 0;
     return OrientationBuilder(builder: (context, orientation) {
       contentScale = 1.0 - (0.05 * scalePercent);
-      contentTranslation =  
-      menuController.state == MenuState.open || menuController.state == MenuState.opening || menuController.state == MenuState.closing
-      ? MediaQuery.of(context).viewInsets.bottom == 0
-      ? -MediaQuery.of(context).size.height * 0.265* scalePercent
-      :(-MediaQuery.of(context).viewInsets.bottom) + MediaQuery.of(context).size.height * 1/20* scalePercent
-      :0.0;
-      cornerRadius = widget.curveRadius * menuController.percentOpen;
+      contentTranslation = menuController.state == MenuState.open ||
+              menuController.state == MenuState.opening ||
+              menuController.state == MenuState.closing
+          ? MediaQuery.of(context).viewInsets.bottom == 0
+              ? -MediaQuery.of(context).size.height * 0.265 * scalePercent
+              : (-MediaQuery.of(context).viewInsets.bottom) +
+                  MediaQuery.of(context).size.height * 1 / 20 * scalePercent
+          : 0.0;
+      cornerRadius = 50 * menuController.percentOpen;
 
       return new Transform(
         transform: new Matrix4.translationValues(0.0, contentTranslation, 0.0)
@@ -113,87 +107,10 @@ class _FlurryNavigationState extends State<FlurryNavigation> with TickerProvider
       );
     });
   }
-  createSlidingUpPanel(BuildContext context) {
-    return SlidingUpPanel(
-        defaultPanelState: PanelState.OPEN,
-        color: Color.fromRGBO(121, 134, 203, 1),
-        isDraggable: false,
-        backdropTapClosesPanel: false,
-        minHeight: MediaQuery.of(context).size.height * 1 / 20,
-        maxHeight: MediaQuery.of(context).size.height,
-        controller: pc,
-        collapsed: FlatButton(
-            onPressed: () {
-              togglesliding();
-            },
-            child: Consumer<User>(
-              builder: (_, userData,__) =>
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Hi "+userData.personalInfo['displayName']+" You're logged in",
-                ),
-              ),
-            ),
-            ),
-        panel: Padding(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 1 / 20,
-          ),
-          child: RootPage(
-                  //auth: new Auth(),
-                  pc: pc,
-                  pcf:toggleslidingtomatchmenu,
-                ),
-        ),
-      );
-  }
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<FirebaseUser>(context);
-    bool loggedIn = user != null;
-    return loggedIn?
-        StreamProvider<User>.value(
-          initialData: User(department: "Loading...",role: 0, personalInfo: {'displayName':'not Signed In'}),
-          value: Api('users').streamUserCollection(user.uid),
-          child: Provider<bool>.value(
-            value: menuController.state== MenuState.closed?false:true,
-            child: Stack(
-              children: [
-                widget.menuScreen,
-                createContentDisplay(),
-                createSlidingUpPanel(context),
-                ],
-              ),
-          ),
-          ): createSlidingUpPanel(context);
-        }
-  toggleslidingtomatchmenu() {
-    switch (menuController.state) {
-      case MenuState.closed:
-        pc.hide();
-        break;
-      case MenuState.open:
-        pc.show();
-        break;
-      case MenuState.opening:
-        //slidePercent = slideOutCurve.transform(menuController.percentOpen);
-        pc.show();
-        break;
-      case MenuState.closing:
-        //slidePercent = slideInCurve.transform(menuController.percentOpen);
-        pc.close();
-        break;
-    }
-  }
-
-  togglesliding() {
-    if (pc.isPanelClosed()) {
-      pc.animatePanelToPosition(0.265);
-    } else if (pc.getPanelPosition() == 0.265) {
-      pc.close();
-    }
+    return createContentDisplay();
   }
 }
 
@@ -210,7 +127,8 @@ class FlurryNavigationMenuController extends StatefulWidget {
   }
 }
 
-class FlurryNavigationMenuControllerState extends State<FlurryNavigationMenuController> {
+class FlurryNavigationMenuControllerState
+    extends State<FlurryNavigationMenuController> {
   MenuController menuController;
 
   @override
@@ -220,7 +138,6 @@ class FlurryNavigationMenuControllerState extends State<FlurryNavigationMenuCont
     menuController = getMenuController(context);
     menuController.addListener(_onMenuControllerChange);
   }
-
 
   getMenuController(BuildContext context) {
     final navigationState =
@@ -239,8 +156,8 @@ class FlurryNavigationMenuControllerState extends State<FlurryNavigationMenuCont
   }
 }
 
-typedef Widget FlurryNavigationBuilder(BuildContext context, MenuController menuController);
-
+typedef Widget FlurryNavigationBuilder(
+    BuildContext context, MenuController menuController);
 
 class MenuController extends ChangeNotifier {
   final TickerProvider vsync;
@@ -274,7 +191,6 @@ class MenuController extends ChangeNotifier {
       });
   }
 
- 
   get percentOpen {
     return _animationController.value;
   }
