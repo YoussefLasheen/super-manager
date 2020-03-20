@@ -4,11 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:supermanager/models/user.dart';
 import 'package:supermanager/navigation/flurry_navigation.dart';
-import 'package:supermanager/screens/auth_screen/login_page.dart';
 import 'package:supermanager/screens/bottom_section/bottom_section.dart';
 import 'package:supermanager/screens/chat_screen/chat_screen.dart';
 import 'package:supermanager/screens/dummy_screen.dart';
-import 'package:supermanager/screens/slide_up_screen/profile_page.dart';
+import 'package:supermanager/screens/slide_up_screen/slide_up_screen.dart';
 import 'package:supermanager/services/api.dart';
 
 class NavigationRoot extends StatefulWidget {
@@ -68,61 +67,13 @@ class _NavigationRootState extends State<NavigationRoot> {
               contentScreen: activeScreen,
               menuState: (bool state) {
                 menuState = state;
-                toggleslidingtomatchmenu();
+                toggleslidingtomatchmenu(pc, menuState);
               },
             ),
-            createSlidingUpPanel(context),
+            createSlidingUpPanel(context, pc),
           ],
         ),
       ),
     );
-  }
-
-  createSlidingUpPanel(BuildContext context) {
-    return SlidingUpPanel(
-      defaultPanelState: PanelState.OPEN,
-      color: Color.fromRGBO(121, 134, 203, 1),
-      isDraggable: false,
-      backdropTapClosesPanel: false,
-      minHeight: MediaQuery.of(context).size.height * 1 / 20,
-      maxHeight: MediaQuery.of(context).size.height,
-      controller: pc,
-      collapsed: FlatButton(
-        onPressed: () => togglesliding(),
-        child: Consumer<User>(
-          builder: (_, userData, __) => Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Hi " +
-                  userData.personalInfo['displayName'] +
-                  " You're logged in",
-            ),
-          ),
-        ),
-      ),
-      panel: Padding(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 1 / 20,
-          ),
-          child: Profile(
-            pc: pc,
-          )),
-    );
-  }
-
-  togglesliding() {
-    if (pc.isPanelClosed()) {
-      pc.animatePanelToPosition(0.265);
-    } else if (pc.getPanelPosition() == 0.265) {
-      pc.close();
-    }
-  }
-
-  toggleslidingtomatchmenu() {
-    if (menuState) {
-      pc.show();
-    } else {
-      pc.hide();
-    }
   }
 }
