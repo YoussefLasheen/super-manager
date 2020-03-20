@@ -4,8 +4,14 @@ class DummyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text("H9"),
+    return Center(
+      child: Row(
+        children: <Widget>[
+          Spacer(),
+          Expanded(flex:5,child: FittedBox(child: Text("Select a contact",style: TextStyle(color: Colors.black54),))),
+          Spacer()
+        ],
+      ),
     );
   }
 }
