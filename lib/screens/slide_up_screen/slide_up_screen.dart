@@ -18,8 +18,14 @@ createSlidingUpPanel(BuildContext context, PanelController pc) {
       child: Consumer<User>(
         builder: (_, userData, __) => Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-            "Hi " + userData.personalInfo['displayName'] + " You're logged in",
+          child: Row(
+            children: <Widget>[
+              Text(
+                "Hi " + userData.personalInfo['displayName'] + " You're logged in",
+              ),
+              Spacer(),
+              //IconButton(icon: Icon(Icons.person),onPressed: (){pc.open();},)
+            ],
           ),
         ),
       ),

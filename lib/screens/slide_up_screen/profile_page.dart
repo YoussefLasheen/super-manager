@@ -6,7 +6,7 @@ import 'package:supermanager/models/user.dart';
 
 List list = [
   'Loading',
-  'Head',
+  'General Manager',
   'Manager',
   'Department Manager',
 ];
@@ -25,125 +25,149 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    isPanelOpen = widget.pc.isPanelOpen();
+    isPanelOpen = widget.pc.isPanelOpen;
   }
-  bool isPanelOpen = true;
+
+  bool isPanelOpen;
   @override
   Widget build(BuildContext context) {
     var user = Provider.of<FirebaseUser>(context);
     var userData = Provider.of<User>(context);
     return Material(
       color: Colors.transparent,
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: isPanelOpen?(MediaQuery.of(context).size.height*0.95)-16: MediaQuery.of(context).size.height*0.235,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.235,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white38,
-                  borderRadius: BorderRadius.all(Radius.circular(32)),
+                  borderRadius: BorderRadius.all(Radius.circular(11)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(
+                  child: Row(
                     children: <Widget>[
+                      Spacer(),
                       Expanded(
-                        child: Flex(
-                          direction: isPanelOpen ? Axis.vertical : Axis.horizontal,
-                          children: <Widget>[
-                            Expanded(
-                                child: Center(
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: CircleAvatar(
-                                      backgroundImage: NetworkImage(user.photoUrl ??
-                                          "https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png"),
-                                      radius: double.infinity,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            Expanded(
-                              flex: isPanelOpen? 1:3,
-                              child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: FittedBox(
-                                          child: Text(
-                                            userData.personalInfo['displayName'],
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                ),
-                                            maxLines: 1,
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: FittedBox(
-                                          child: Text(
-                                            list[userData.role] +
-                                                ' of ' +
-                                                userData.department,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontStyle: FontStyle.italic,
-                                                ),
-                                            maxLines: 1,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                          ],
+                        flex: 15,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(user.photoUrl ??
+                                "https://firebasestorage.googleapis.com/v0/b/supermanagerdemo.appspot.com/o/IMG-20191214-255-overlay%20ediasted.png?alt=media&token=4383650b-89d9-43a5-89da-833c67ff5995"),
+                            radius: double.infinity,
+                          ),
                         ),
                       ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height/30,
-                        width: MediaQuery.of(context).size.width,
-                        child: FlatButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.only(bottomLeft:Radius.circular(20),bottomRight:Radius.circular(20)),
-                            side: BorderSide(color: Color.fromRGBO(38, 198, 218, 1))
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 200),
-                          onPressed: () {
-                            bool newstate;
-                            isPanelOpen == true? newstate = false:newstate = true;
-                            isPanelOpen?widget.pc.close() : widget.pc.open();
-                            setState(() {
-                              isPanelOpen = newstate;
-                            });
-                          },
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: FittedBox(
-                              child: Text(
-                                isPanelOpen? "Finish" : "Edit",
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontFamily: 'Source Sans Pro',
-                                  fontSize: 126.0,
-                                  color: Color.fromRGBO(38, 198, 218, 1),
+                      Spacer(),
+                      Expanded(
+                        flex: 30,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Spacer(
+                              flex: 2,
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: FittedBox(
+                                child: Text(
+                                  userData.personalInfo['displayName'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  maxLines: 1,
                                 ),
                               ),
                             ),
-                          ),
+                            Expanded(
+                              flex: 2,
+                              child: FittedBox(
+                                child: Text(
+                                  list[userData.role] +
+                                      ' · ' +
+                                      userData.department,
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                            Spacer(),
+                            Expanded(
+                              child: InkWell(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    FittedBox(
+                                      child: Text(
+                                        " Update your profile",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Spacer(
+                              flex: 6,
+                            ),
+                          ],
                         ),
                       ),
+                      Spacer(
+                        flex: 8,
+                      )
                     ],
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+            Spacer(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 30,
+              width: MediaQuery.of(context).size.width,
+              child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+                    side: BorderSide(color: Color.fromRGBO(38, 198, 218, 1))),
+                padding: EdgeInsets.symmetric(horizontal: 200),
+                onPressed: () {
+                  widget.pc.close();
+                },
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: FittedBox(
+                    child: Text(
+                      "Close",
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontFamily: 'Source Sans Pro',
+                        fontSize: 126.0,
+                        color: Color.fromRGBO(38, 198, 218, 1),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
