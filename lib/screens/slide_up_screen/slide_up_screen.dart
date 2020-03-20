@@ -6,7 +6,7 @@ import 'package:supermanager/screens/slide_up_screen/profile_page.dart';
 
 createSlidingUpPanel(BuildContext context, PanelController pc) {
   return SlidingUpPanel(
-    defaultPanelState: PanelState.OPEN,
+    defaultPanelState: PanelState.CLOSED,
     color: Color.fromRGBO(121, 134, 203, 1),
     isDraggable: false,
     backdropTapClosesPanel: false,
