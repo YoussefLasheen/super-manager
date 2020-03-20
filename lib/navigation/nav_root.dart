@@ -36,6 +36,7 @@ class _NavigationRootState extends State<NavigationRoot> {
         initialData: User(
             department: "Loading...",
             role: 0,
+            rating: [],
             personalInfo: {'displayName': 'not Signed In'}),
         value: Api('users').streamUserCollection(user.uid),
         child: Stack(
